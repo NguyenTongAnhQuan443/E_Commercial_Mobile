@@ -1,6 +1,9 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../reduxTollkit/cartSlice';
 
 const ManageTaskScreen = () => {
     const items = [
@@ -8,7 +11,7 @@ const ManageTaskScreen = () => {
             id: 1,
             title: 'Organic Bananas',
             weight: '7pcs, Price',
-            price: '$4.99',
+            price: 4.99,
             description: 'Fresh and organic',
             image: require('../assets/banana.png'),
         },
@@ -16,7 +19,7 @@ const ManageTaskScreen = () => {
             id: 2,
             title: 'Red Apple',
             weight: '1kg, Price',
-            price: '$4.99',
+            price: 4.99,
             description: 'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.',
             image: require('../assets/apple.png'),
         },
@@ -24,7 +27,7 @@ const ManageTaskScreen = () => {
             id: 3,
             title: 'Organic Bananas',
             weight: '7pcs, Price',
-            price: '$4.99',
+            price: 4.99,
             description: 'Fresh and organic',
             image: require('../assets/banana.png'),
         },
@@ -51,6 +54,13 @@ const ManageTaskScreen = () => {
         },
     ];
 
+    const dispatch = useDispatch();
+
+    const handleAddToCart = (item) => {
+        dispatch(addToCart(item));
+        Alert.alert('Success', 'Item added to cart');
+    }
+
     const renderItem = (item, index) => {
         return (
             <View key={index} style={styles.itemContainer}>
@@ -68,7 +78,7 @@ const ManageTaskScreen = () => {
                         <Text style={styles.itemPrice}>
                             {item.price}
                         </Text>
-                        <TouchableOpacity style={styles.itemButton}>
+                        <TouchableOpacity style={styles.itemButton} onPress={() => handleAddToCart(item)}>
                             <Text style={styles.itemButtonText}>
                                 <Icon name='plus' size={17} color={'white'} />
                             </Text> 

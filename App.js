@@ -5,11 +5,16 @@ import HomeDashboardNew from './components/HomeDashboardNew';
 
 import { NavigationContainer } from '@react-navigation/native';
 
+import { Provider } from 'react-redux';
+import store from './reduxTollkit/store';
+
 export default function App() {
   return (
-    <NavigationContainer>
-      <HomeDashboardNew />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <HomeDashboardNew />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

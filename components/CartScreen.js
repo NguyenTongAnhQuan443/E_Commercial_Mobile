@@ -1,98 +1,20 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
 import {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/Feather';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxTollkit/cartSlice';
 
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
 
-    const items = [
-        {
-            id: 1,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 2,
-            title: 'Red Apple',
-            weight: '1kg, Price',
-            price: '4.99',
-            description: 'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.',
-            image: require('../assets/apple.png'),
-        },
-        {
-            id: 3,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 4,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 5,
-            title: 'Red Apple',
-            weight: '1kg, Price',
-            price: '4.99',
-            description: 'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.',
-            image: require('../assets/apple.png'),
-        },
-        {
-            id: 6,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 7,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 8,
-            title: 'Red Apple',
-            weight: '1kg, Price',
-            price: '4.99',
-            description: 'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.',
-            image: require('../assets/apple.png'),
-        },
-        {
-            id: 9,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: '4.99',
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-    ];
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.items);
 
     // Set cart items
     useEffect(() => {
-        const cartItems = items.map(item => {
-            return {
-                ...item,
-                quantity: 1,
-            }
-        });
-        console.log(cartItems);
-
-        setCartItems(cartItems);
-    }, []);
+        setCartItems(cart);
+    }, [cart]);
 
     // Calculate total
     useEffect(() => {
@@ -103,59 +25,7 @@ const CartScreen = () => {
 
         setTotal(total);
     }, [cartItems]);
-
-    // Increase quantity
-    const handleIncrease = (id) => {
-        const newCartItems = cartItems.map(item => {
-            if(item.id === id && item.quantity < 10) {
-                return {
-                    ...item,
-                    quantity: item.quantity + 1,
-                }
-            }
-            return item;
-        });
-
-        setCartItems(newCartItems);
-    }
-
-    // Decrease quantity
-    const handleDescrease = (id) => {
-        const newCartItems = cartItems.map(item => {
-            if(item.id === id && item.quantity > 1) {
-                return {
-                    ...item,
-                    quantity: item.quantity - 1,
-                }
-            }
-            return item;
-        });
-
-        setCartItems(newCartItems);
-    }
-
-    // Change quantity
-    const handleChangeQuantity = (id, text) => {
-        const newCartItems = cartItems.map(item => {
-            if(item.id === id && text !== '' && !isNaN(text) && parseInt(text) > 0 && parseInt(text) <= 10) {
-                return {
-                    ...item,
-                    quantity: parseInt(text),
-                }
-            }
-            return item;
-        });
-
-        setCartItems(newCartItems);
-    }
-
-    // Delete item
-    const handleDelete = (id) => {
-        const newCartItems = cartItems.filter(item => item.id !== id);
-        setCartItems(newCartItems);
-    }
-
-    
+  
 
     const renderCartItems = (item) => {
         return (
@@ -171,23 +41,23 @@ const CartScreen = () => {
                         {item.weight}
                     </Text>
                     <View style={styles.cartItemQuantity}>
-                        <TouchableOpacity style={styles.quantityButton} onPress={() => handleDescrease(item.id)}>
+                        <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(decreaseQuantity(item))}>
                             <Icon name='minus' size={20} color={'gray'} />
                         </TouchableOpacity>
                         <TextInput 
                             value={item.quantity.toString()}
                             style={styles.quantityInput}
-                            onChangeText={(text) => handleChangeQuantity(item.id, text)}
+                            onChangeText={(text) => dispatch(changeQuantity({id: item.id, text}))}
                             keyboardType='numeric'
                         />
-                        <TouchableOpacity style={styles.quantityButton} onPress={() => handleIncrease(item.id)}>
+                        <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(increaseQuantity(item))}>
                             <Icon name='plus' size={20} color={'#53b175'} />
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.cartItemPriceContainer}>
                     <View style={styles.cartItemPrice}>
-                        <TouchableOpacity style={styles.deleteButton} onPress={() => handleDelete(item.id)}>
+                        <TouchableOpacity style={styles.deleteButton} onPress={() => dispatch(removeFromCart(item))}>
                             <Icon name='x' size={20} color={'gray'} />
                         </TouchableOpacity>
                         <Text style={styles.cartItemPriceText}>
