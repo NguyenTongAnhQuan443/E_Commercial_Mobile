@@ -51,10 +51,9 @@ const HomeDashboardNew = () => {
                 headerShown: false,
             })}
         >
-          <Tab.Screen name='Cart' component={CartScreen}/>
             <Tab.Screen name='Home' component={HomeScreen} />
             <Tab.Screen name='Explore' component={Explore} />
-            
+            <Tab.Screen name='Cart' component={CartScreen}/>
             <Tab.Screen name='Signup' component={SignUp}/>
         </Tab.Navigator>
     )
