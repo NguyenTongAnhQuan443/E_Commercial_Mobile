@@ -6,4 +6,5 @@
 ### 2) Login Screen - Sign Up Screen
 ![img_2.png](./screenDemo/LoginScreen.png)
 ![img_2.png](./screenDemo/SignUpScreen.png)
-
+### Explore Screen (Find Product Screen)
+![alt text](<screenDemo/ExploreScreen(Find product).png>)
