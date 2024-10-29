@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import SignUp from './SignUp';
 import Explore from './Explore';
 import HomeScreen from './HomeScreen';
+import CartScreen from './CartScreen';
 
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -33,6 +34,8 @@ const HomeDashboardNew = () => {
                         iconName = 'user-plus'; 
                       } else if (route.name === 'Explore') {
                         iconName = 'search'; 
+                      } else if (route.name === 'Cart') {
+                        iconName = 'shopping-cart'; 
                       }
             
                       return (
@@ -48,8 +51,10 @@ const HomeDashboardNew = () => {
                 headerShown: false,
             })}
         >
+          <Tab.Screen name='Cart' component={CartScreen}/>
             <Tab.Screen name='Home' component={HomeScreen} />
             <Tab.Screen name='Explore' component={Explore} />
+            
             <Tab.Screen name='Signup' component={SignUp}/>
         </Tab.Navigator>
     )
