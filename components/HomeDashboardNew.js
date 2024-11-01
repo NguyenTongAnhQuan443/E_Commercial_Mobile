@@ -7,6 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import SignUp from './SignUp';
 import Explore from './Explore';
 import HomeScreen from './HomeScreen';
+import ProductDetails from './ProductDetails';
 
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -48,8 +49,8 @@ const HomeDashboardNew = () => {
                 headerShown: false,
             })}
         >
-            <Tab.Screen name='Home' component={HomeScreen} />
-            <Tab.Screen name='Explore' component={Explore} />
+            <Tab.Screen name='Home' component={ProductDetails} />
+            <Tab.Screen name='Explore' component={ProductDetails} />
             <Tab.Screen name='Signup' component={SignUp}/>
         </Tab.Navigator>
     )
