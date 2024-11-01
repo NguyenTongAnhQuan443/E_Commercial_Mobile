@@ -1,23 +1,27 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import React from 'react'
 
 import { Ionicons } from '@expo/vector-icons'
 
 import catProducts from '../dataTest/CatProduct'
 
-const ProductType = () => {
+const SearchScreen = () => {
     return (
         <SafeAreaView style={{ flex: 1, paddingLeft: 10, paddingRight: 10, }}>
 
             {/* View - 1 */}
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10 }}>
                 <Ionicons name='arrow-back-outline' size={28} />
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Đồ chơi thú cưng</Text>
+                <View style={{ width: '80%', height: 45 }}>
+                    <TextInput style={{ borderWidth: 0.5, height: '100%', width: '100%', borderRadius: 10, backgroundColor: '#F2F3F2', paddingLeft: 40 }} placeholder='Tên sản phẩm' />
+                    <Ionicons name='search-outline' size={22} style={{position: 'absolute', left: 10, top: 10}}/>
+                    <Ionicons name='close-outline' size={22} style={{position: 'absolute', right: 20, top: 10}}/>
+                </View>
                 <Ionicons name='filter-outline' size={28} />
             </View>
 
             {/* View - 2 */}
-            <View style={{ flex: 11 }}>
+            <View style={{ flex: 11, marginTop: 10 }}>
 
                 <FlatList
                     data={catProducts}
@@ -31,8 +35,7 @@ const ProductType = () => {
         </SafeAreaView>
     )
 }
-
-export default ProductType
+export default SearchScreen
 
 const renderItem = ({ item }) => (
     <View style={{ width: '45%', height: 250, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: 'grey', paddingBottom: 10, paddingTop: 10, marginHorizontal: 10, marginBottom: 10 }}>
@@ -57,5 +60,7 @@ const renderItem = ({ item }) => (
         </View>
     </View>
 )
+
+
 
 const styles = StyleSheet.create({})

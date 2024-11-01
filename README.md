@@ -14,3 +14,5 @@
 ![alt text](screenDemo/ProductDetailsScreen.png)
 ### 4) Product Type (Beverages)
 ![alt text](screenDemo/ProductType.png)
+### 5) Search Screen
+![alt text](screenDemo/SearchScreen.png)
