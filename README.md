@@ -12,3 +12,5 @@
 ![alt text](<screenDemo/ExploreScreen(Find product).png>)
 ### 4) Product Details Screen
 ![alt text](screenDemo/ProductDetailsScreen.png)
+### 4) Product Type (Beverages)
+![alt text](screenDemo/ProductType.png)

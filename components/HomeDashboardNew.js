@@ -8,7 +8,7 @@ import Explore from './Explore';
 import HomeScreen from './HomeScreen';
 import ProductDetails from './ProductDetails';
 import CartScreen from './CartScreen';
-
+import ProductType from './ProductType';
 
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -52,6 +52,7 @@ const HomeDashboardNew = () => {
         headerShown: false,
       })}
     >
+       <Tab.Screen name='ProductType' component={ProductType} />
       <Tab.Screen name='Explore' component={ProductDetails} />
       <Tab.Screen name='Home' component={HomeScreen} />
       <Tab.Screen name='Cart' component={CartScreen} />
