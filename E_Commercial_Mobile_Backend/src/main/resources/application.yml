@@ -1,0 +1,26 @@
+server:
+    port: 8080
+spring:
+  security:
+    oauth2:
+        client:
+          registration:
+            facebook:
+              clientId: 3955966801294068
+              clientSecret: 93b21c8b6af0b9091d119d4e1fbfbbc7
+              scope: public_profile, email
+              clientName: Facebook
+#            github:
+#              clientId: Iv23lirsPkWAgD8DpA9M
+#              clientSecret: f2ed8229ec2db8b182096acc578bf7151328f1ef
+#              scope: user:email
+            google:
+              client-id: 532438484063-s48q5jrlgs619eo1aks5qhmed7v7k12e.apps.googleusercontent.com
+              client-secret: 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
+              scope: profile, email
+              redirect-uri: http://localhost:8081/login/oauth2/code/google
+          provider:
+            google:
+              authorization-uri: https://accounts.google.com/o/oauth2/auth
+              token-uri: https://oauth2.googleapis.com/token
+              user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
