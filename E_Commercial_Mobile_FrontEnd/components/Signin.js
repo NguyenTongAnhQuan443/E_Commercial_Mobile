@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState, useEffect } from 'react'
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
@@ -9,7 +10,7 @@ WebBrowser.maybeCompleteAuthSession();
 const Signin = () => {
 
     const [userInfo, setUserInfo] = useState(null);
-    
+
     // login with google
     const [requestGoogle, googleResponse, promptAsyncGoogle] = Google.useAuthRequest({
         webClientId: '532438484063-s48q5jrlgs619eo1aks5qhmed7v7k12e.apps.googleusercontent.com',
@@ -59,9 +60,9 @@ const Signin = () => {
     };
 
     // login with facebook
-    
 
-    
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.buttonContainer}>

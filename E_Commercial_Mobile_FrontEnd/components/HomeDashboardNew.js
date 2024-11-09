@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SignUp from './SignUp';
@@ -54,10 +54,14 @@ const HomeDashboardNew = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name='Signin' component={Signin} />
-       <Tab.Screen name='ProductType' component={SearchScreen} />
-      <Tab.Screen name='Explore' component={ProductDetails} />
+      {/* <Tab.Screen name='Signin' component={Signin} /> */}
       <Tab.Screen name='Home' component={HomeScreen} />
+      <Tab.Screen name='Detail' component={ProductDetails} />
+      <Tab.Screen name='Explore' component={Explore} />
+      <Tab.Screen name='Type' component={ProductType} />
+      <Tab.Screen name='Search' component={SearchScreen} />
+
+
       <Tab.Screen name='Cart' component={CartScreen} />
       <Tab.Screen name='Signup' component={SignUp} />
     </Tab.Navigator>

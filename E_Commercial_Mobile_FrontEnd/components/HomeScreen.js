@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import {useState, useEffect} from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useDispatch } from 'react-redux';
@@ -81,7 +82,7 @@ const ManageTaskScreen = () => {
                         <TouchableOpacity style={styles.itemButton} onPress={() => handleAddToCart(item)}>
                             <Text style={styles.itemButtonText}>
                                 <Icon name='plus' size={17} color={'white'} />
-                            </Text> 
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -91,8 +92,8 @@ const ManageTaskScreen = () => {
 
     return (
         <ScrollView style={styles.scrollViewContainer}
-                showsVerticalScrollIndicator={false}
-           >
+            showsVerticalScrollIndicator={false}
+        >
             <SafeAreaView style={styles.container}>
                 <View style={styles.logoContainer}>
                     <Image source={require('../assets/logo.png')} style={styles.logoImage} />
@@ -105,7 +106,7 @@ const ManageTaskScreen = () => {
                 </View>
                 <View style={styles.searchContainer}>
                     <Icon name='search' size={20} color={'black'} />
-                    <TextInput 
+                    <TextInput
                         placeholder='Search Store'
                         style={styles.searchInput}
                     />
@@ -166,7 +167,7 @@ const ManageTaskScreen = () => {
                 >
                     {
                         categories.map((category, index) => (
-                            <View key={index} style={[styles.categoryContainer, {backgroundColor: category.backgroundColor}]} >
+                            <View key={index} style={[styles.categoryContainer, { backgroundColor: category.backgroundColor }]} >
                                 <Image source={category.image} style={styles.categoryImage} />
                                 <Text style={styles.categoryText}>
                                     {category.title}
@@ -205,7 +206,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
-        marginTop: 20,
     },
     logoImage: {
         width: 30,

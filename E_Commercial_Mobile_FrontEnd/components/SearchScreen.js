@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
 import React from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Ionicons } from '@expo/vector-icons'
 
@@ -10,12 +11,12 @@ const SearchScreen = () => {
         <SafeAreaView style={{ flex: 1, paddingLeft: 10, paddingRight: 10, }}>
 
             {/* View - 1 */}
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Ionicons name='arrow-back-outline' size={28} />
                 <View style={{ width: '80%', height: 45 }}>
                     <TextInput style={{ borderWidth: 0.5, height: '100%', width: '100%', borderRadius: 10, backgroundColor: '#F2F3F2', paddingLeft: 40 }} placeholder='Tên sản phẩm' />
-                    <Ionicons name='search-outline' size={22} style={{position: 'absolute', left: 10, top: 10}}/>
-                    <Ionicons name='close-outline' size={22} style={{position: 'absolute', right: 20, top: 10}}/>
+                    <Ionicons name='search-outline' size={22} style={{ position: 'absolute', left: 10, top: 10 }} />
+                    <Ionicons name='close-outline' size={22} style={{ position: 'absolute', right: 20, top: 10 }} />
                 </View>
                 <Ionicons name='filter-outline' size={28} />
             </View>
@@ -60,7 +61,3 @@ const renderItem = ({ item }) => (
         </View>
     </View>
 )
-
-
-
-const styles = StyleSheet.create({})

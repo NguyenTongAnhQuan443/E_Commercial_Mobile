@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
-import {useState, useEffect} from 'react';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxTollkit/cartSlice';
@@ -25,7 +26,7 @@ const CartScreen = () => {
 
         setTotal(total);
     }, [cartItems]);
-  
+
 
     const renderCartItems = (item) => {
         return (
@@ -44,10 +45,10 @@ const CartScreen = () => {
                         <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(decreaseQuantity(item))}>
                             <Icon name='minus' size={20} color={'gray'} />
                         </TouchableOpacity>
-                        <TextInput 
+                        <TextInput
                             value={item.quantity.toString()}
                             style={styles.quantityInput}
-                            onChangeText={(text) => dispatch(changeQuantity({id: item.id, text}))}
+                            onChangeText={(text) => dispatch(changeQuantity({ id: item.id, text }))}
                             keyboardType='numeric'
                         />
                         <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(increaseQuantity(item))}>
@@ -80,7 +81,7 @@ const CartScreen = () => {
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         data={cartItems}
-                        renderItem={({item}) => renderCartItems(item)}
+                        renderItem={({ item }) => renderCartItems(item)}
                         keyExtractor={item => item.id.toString()}
                     />
                 ) : (
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     emptyCartText: {
         fontSize: 18,
     },
-    
+
 });
 
 export default CartScreen;

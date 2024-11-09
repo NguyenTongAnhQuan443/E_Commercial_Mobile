@@ -1,4 +1,5 @@
-import { View, Text, SafeAreaView, TextInput, Image, FlatList } from 'react-native'
+import { View, Text, TextInput, Image, FlatList } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react'
 
 import { Ionicons } from '@expo/vector-icons'

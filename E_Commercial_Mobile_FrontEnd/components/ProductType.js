@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react'
 
 import { Ionicons } from '@expo/vector-icons'
@@ -10,7 +11,7 @@ const ProductType = () => {
         <SafeAreaView style={{ flex: 1, paddingLeft: 10, paddingRight: 10, }}>
 
             {/* View - 1 */}
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 10 }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Ionicons name='arrow-back-outline' size={28} />
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Đồ chơi thú cưng</Text>
                 <Ionicons name='filter-outline' size={28} />
@@ -35,7 +36,7 @@ const ProductType = () => {
 export default ProductType
 
 const renderItem = ({ item }) => (
-    <View style={{ width: '45%', height: 250, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: 'grey', paddingBottom: 10, paddingTop: 10, marginHorizontal: 10, marginBottom: 10 }}>
+    <View style={{ width: '45%', height: 250, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', borderWidth: 0.5, borderColor: 'grey', paddingBottom: 10, paddingTop: 10, marginHorizontal: 10, marginBottom: 10 }}>
 
         {/* Image Product */}
         <View style={{ height: '50%', width: '85%' }}>
