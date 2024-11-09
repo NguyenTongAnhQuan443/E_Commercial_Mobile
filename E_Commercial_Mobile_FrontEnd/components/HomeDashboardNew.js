@@ -13,6 +13,7 @@ import SearchScreen from './SearchScreen';
 import Signin from './Signin';
 
 import Icon from 'react-native-vector-icons/Feather';
+import FavoritesScreen from './FavoritesScreen';
 
 const HomeDashboardNew = () => {
 
@@ -60,9 +61,8 @@ const HomeDashboardNew = () => {
       <Tab.Screen name='Explore' component={Explore} />
       <Tab.Screen name='Type' component={ProductType} />
       <Tab.Screen name='Search' component={SearchScreen} />
-
-
       <Tab.Screen name='Cart' component={CartScreen} />
+      <Tab.Screen name='Fav' component={FavoritesScreen} />
       <Tab.Screen name='Signup' component={SignUp} />
     </Tab.Navigator>
   )
