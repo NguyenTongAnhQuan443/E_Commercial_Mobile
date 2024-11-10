@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import SignUp from './SignUp';
 import Explore from './Explore';
-import HomeScreen from './HomeScreen';
 import ProductDetails from './ProductDetails';
 import CartScreen from './CartScreen';
 import ProductType from './ProductType';
@@ -17,6 +16,7 @@ import OrderAcceptedScreen from './OrderAcceptedScreen';
 
 import Icon from 'react-native-vector-icons/Feather';
 import FavoritesScreen from './FavoritesScreen';
+import HomeStack from './HomeStack';
 
 const HomeDashboardNew = () => {
 
@@ -59,8 +59,7 @@ const HomeDashboardNew = () => {
       })}
     >
       {/* <Tab.Screen name='Signin' component={Signin} /> */}
-      <Tab.Screen name='Home' component={HomeScreen} />
-      <Tab.Screen name='Detail' component={ProductDetails} />
+      <Tab.Screen name='Home' component={HomeStack} />
       <Tab.Screen name='Explore' component={Explore} />
       <Tab.Screen name='Type' component={ProductType} />
       <Tab.Screen name='Search' component={SearchScreen} />

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../reduxTollkit/cartSlice';
+import { addToCart } from '../reduxToolkit/cartSlice';
 
-const ManageTaskScreen = () => {
+const ManageTaskScreen = ({navigation}) => {
     const items = [
         {
             id: 1,
@@ -58,16 +58,16 @@ const ManageTaskScreen = () => {
     const dispatch = useDispatch();
 
     const handleAddToCart = (item) => {
-        dispatch(addToCart(item));
+        dispatch(addToCart({ ...item, quantity: 1 }));
         Alert.alert('Success', 'Item added to cart');
     }
 
     const renderItem = (item, index) => {
         return (
             <View key={index} style={styles.itemContainer}>
-                <View style={styles.itemImageContainer}>
+                <TouchableOpacity style={styles.itemImageContainer} onPress={() => navigation.navigate('ProductDetails', { item })}>
                     <Image source={item.image} style={styles.itemImage} />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.itemDetailContainer}>
                     <Text style={styles.itemTitle}>
                         {item.title}
@@ -77,7 +77,7 @@ const ManageTaskScreen = () => {
                     </Text>
                     <View style={styles.itemPriceContainer}>
                         <Text style={styles.itemPrice}>
-                            {item.price}
+                            ${item.price}
                         </Text>
                         <TouchableOpacity style={styles.itemButton} onPress={() => handleAddToCart(item)}>
                             <Text style={styles.itemButtonText}>

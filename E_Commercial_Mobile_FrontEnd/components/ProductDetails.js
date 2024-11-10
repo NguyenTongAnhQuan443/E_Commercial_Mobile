@@ -1,23 +1,68 @@
 import { StyleSheet, Text, View, Image, Dimensions, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React from 'react';
+import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Feather';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../reduxToolkit/cartSlice';
+import { Alert } from 'react-native';
+
 
 const { width, height } = Dimensions.get('window')
 
-const ProductDetails = () => {
+const ProductDetails = ({route, navigation}) => {
   const productImages = [
-    'https://hoaquafuji.com/storage/app/media/anh-sua/cropped-images/tao-do-2-6-16-794-709-1623469683.jpg',
+    'https://i.ibb.co/7KBzgyJ/Vector.png',
     'https://hoaquafuji.com/storage/app/media/anh-sua/cropped-images/tao-do-2-6-16-794-709-1623469683.jpg',
     'https://hoaquafuji.com/storage/app/media/anh-sua/cropped-images/tao-do-2-6-16-794-709-1623469683.jpg',
   ];
 
+  const itemDetail = route.params.item;
+  console.log("🚀 ~ ProductDetails ~ itemDetail", itemDetail)
+
+  const [quantity, setQuantity] = useState(1);
+
+  const handleIncreaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const dispatch = useDispatch();
+  
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...itemDetail, quantity }));
+    Alert.alert(
+      'Success', 
+      'Product added to cart', 
+      [
+        {
+          text: 'Go to Cart', 
+          onPress: () => navigation.navigate('Cart'), 
+        },
+        {
+          text: 'OK', 
+          onPress: () => console.log('OK Pressed'), 
+        },
+      ]
+    );
+  };
+
   const renderItem = ({ item }) => (
-    <Image source={{ uri: item }} style={{ width: width, height: height * 0.4, borderBottomRightRadius: 30, borderBottomLeftRadius: 30 }} />
+    <Image source={{ uri: item }} style={{ width: width, height: height * 0.4, borderBottomRightRadius: 30, borderBottomLeftRadius: 30, resizeMode: 'contain' }} />
   );
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      
+      {/* Back Button */}
+      <TouchableOpacity style={{position: 'absolute', top: 10, left: 10, padding: 10, zIndex: 1}} onPress={() => navigation.goBack()}>
+        <Icon name="chevron-left" size={24} color="#000" />
+      </TouchableOpacity>
 
       {/* View - Image product */}
       <View style={{ flex: 5, backgroundColor: '#F2F3F2' }}>
@@ -40,8 +85,8 @@ const ProductDetails = () => {
 
           {/* Name product */}
           <View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Naturel Red Apple</Text>
-            <Text style={{ fontSize: 16, color: 'grey' }}>1kg / Price</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{itemDetail.title}</Text>
+            <Text style={{ fontSize: 16, color: 'grey' }}>{itemDetail.weight}</Text>
           </View>
 
           {/* Icon Heart */}
@@ -55,14 +100,20 @@ const ProductDetails = () => {
 
           {/* Quantity */}
           <View style={{ flexDirection: 'row' }}>
-            <Ionicons name='remove-outline' size={24} />
-            <TextInput style={{ borderWidth: 1, width: 35, height: 25, marginLeft: 10, marginRight: 10, borderRadius: 8, paddingLeft: 10 }} placeholder='1' />
-            <Ionicons name='add-outline' size={24} color={'#58B379'} />
+            <TouchableOpacity onPress={() => handleDecreaseQuantity()}>
+              <Ionicons name='remove-outline' size={24} />
+            </TouchableOpacity>
+            <TextInput style={{ borderWidth: 1, width: 35, height: 25, marginLeft: 10, marginRight: 10, borderRadius: 8, paddingLeft: 10 }} placeholder='1' 
+              value={quantity.toString()}
+            />
+            <TouchableOpacity onPress={() => handleIncreaseQuantity()}>
+              <Ionicons name='add-outline' size={24} color={'#58B379'} />
+            </TouchableOpacity>
           </View>
 
           {/* Price product */}
           <View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>$4.99</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>${itemDetail.price}</Text>
           </View>
         </View>
 
@@ -73,7 +124,7 @@ const ProductDetails = () => {
           </View>
 
           <View style={{ marginTop: 10 }}>
-            <Text style={{ fontSize: 16, color: '#7C7C7C' }}>Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.</Text>
+            <Text style={{ fontSize: 16, color: '#7C7C7C' }}>{itemDetail.description}</Text>
           </View>
         </View>
 
@@ -111,7 +162,7 @@ const ProductDetails = () => {
 
         {/* Button Add */}
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <TouchableOpacity style={{ width: '100%', height: '80%', backgroundColor: '#53B175', borderRadius: 20, justifyContent: 'center', alignItems: 'center' }}>
+          <TouchableOpacity style={{ width: '100%', height: '80%', backgroundColor: '#53B175', borderRadius: 20, justifyContent: 'center', alignItems: 'center' }} onPress={() => handleAddToCart()}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>Add To Basket</Text>
           </TouchableOpacity>
         </View>
