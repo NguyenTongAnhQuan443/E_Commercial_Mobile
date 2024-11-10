@@ -11,6 +11,9 @@ import CartScreen from './CartScreen';
 import ProductType from './ProductType';
 import SearchScreen from './SearchScreen';
 import Signin from './Signin';
+import AccountScreen from './AccountScreen';
+import OrderAcceptedScreen from './OrderAcceptedScreen';
+
 
 import Icon from 'react-native-vector-icons/Feather';
 import FavoritesScreen from './FavoritesScreen';
@@ -63,6 +66,8 @@ const HomeDashboardNew = () => {
       <Tab.Screen name='Search' component={SearchScreen} />
       <Tab.Screen name='Cart' component={CartScreen} />
       <Tab.Screen name='Fav' component={FavoritesScreen} />
+      <Tab.Screen name='Acc' component={AccountScreen} />
+      <Tab.Screen name='Or' component={OrderAcceptedScreen} />
       <Tab.Screen name='Signup' component={SignUp} />
     </Tab.Navigator>
   )

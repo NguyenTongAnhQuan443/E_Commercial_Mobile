@@ -12,13 +12,13 @@ const SearchScreen = () => {
 
             {/* View - 1 */}
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Ionicons name='arrow-back-outline' size={28} />
+                <Ionicons name='arrow-back-outline' size={26} />
                 <View style={{ width: '80%', height: 45 }}>
                     <TextInput style={{ borderWidth: 0.5, height: '100%', width: '100%', borderRadius: 10, backgroundColor: '#F2F3F2', paddingLeft: 40 }} placeholder='Tên sản phẩm' />
                     <Ionicons name='search-outline' size={22} style={{ position: 'absolute', left: 10, top: 10 }} />
                     <Ionicons name='close-outline' size={22} style={{ position: 'absolute', right: 20, top: 10 }} />
                 </View>
-                <Ionicons name='filter-outline' size={28} />
+                <Ionicons name='filter-outline' size={26} />
             </View>
 
             {/* View - 2 */}

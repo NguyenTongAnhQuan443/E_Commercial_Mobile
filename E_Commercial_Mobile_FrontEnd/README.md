@@ -14,7 +14,11 @@
 ![alt text](screenDemo/CartScreen.png)
 ### 7) Favorites Screen
 ![alt text](screenDemo/FavoritesScreen.png)
+### 8) Account Screen
+![alt text](screenDemo/AccountScreen.png)
+### 9) Order Accepted Screen
+![alt text](screenDemo/OrderAcceptedScreen.png)
 
-### 7) Login Screen - Sign Up Screen
+### 10) Login Screen - Sign Up Screen
 ![img_2.png](./screenDemo/LoginScreen.png)
 ![img_2.png](./screenDemo/SignUpScreen.png)

@@ -16,7 +16,7 @@ const Explore = () => {
 
             {/* Text tìm kiếm sản phẩm */}
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Tìm kiếm sản phẩm</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Tìm kiếm sản phẩm</Text>
             </View>
 
             {/* TextInput tìm kiếm sản phẩm */}

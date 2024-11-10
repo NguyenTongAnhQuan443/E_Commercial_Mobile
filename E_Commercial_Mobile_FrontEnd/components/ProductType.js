@@ -12,9 +12,9 @@ const ProductType = () => {
 
             {/* View - 1 */}
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Ionicons name='arrow-back-outline' size={28} />
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Đồ chơi thú cưng</Text>
-                <Ionicons name='filter-outline' size={28} />
+                <Ionicons name='arrow-back-outline' size={26} />
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Đồ chơi thú cưng</Text>
+                <Ionicons name='filter-outline' size={26} />
             </View>
 
             {/* View - 2 */}
