@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/cartSlice';
+import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/slices/cartSlice';
 
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);

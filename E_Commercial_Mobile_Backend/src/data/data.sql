@@ -209,7 +209,6 @@ INSERT INTO `category` (`id`, `description`, `name`) VALUES
 (2, 'Thức ăn ướt cho chó', 'Dog Wet Food'),
 (3, 'Thức ăn khô cho mèo', 'Cat Dry Food'),
 (4, 'Thức ăn ướt cho mèo', 'Cat Wet Food'),
-(5, 'Phụ kiện thú cưng', 'Pet Accessories');
 
 -- Dữ liệu cho bảng user
 INSERT INTO `user` (`id`, `activation_code`, `address`, `avatar`, `email`, `enabled`, `full_name`, `gender`, `password`, `phone`, `username`)
@@ -224,7 +223,7 @@ INSERT INTO `product` (`id`, `avg_rating`, `description`, `name`, `price`, `quan
 (2, 4.2, 'Thức ăn ướt giàu dinh dưỡng cho chó', 'Nutritious Wet Dog Food', 120000, 30, '2kg', 2),
 (3, 4.8, 'Thức ăn khô giòn tan cho mèo', 'Crunchy Cat Dry Food', 100000, 70, '3kg', 3),
 (4, 4.7, 'Thức ăn ướt vị cá hồi cho mèo', 'Salmon Wet Cat Food', 130000, 40, '1.5kg', 4),
-(5, 4.6, 'Bộ dây đeo và vòng cổ thời trang cho thú cưng', 'Fashionable Pet Collar and Leash Set', 250000, 20, 'N/A', 5),
+(5, 4.6, 'Thức ăn siêu cấp cho mèo', 'Fashionable Pet Collar and Leash Set', 250000, 20, '0.5kg', 3),
 (6, 4.3, 'Thức ăn khô năng lượng cao cho chó', 'High Energy Dog Dry Food', 140000, 60, '4kg', 1),
 (7, 4.9, 'Thức ăn ướt hỗn hợp vị gà và gan', 'Chicken and Liver Wet Food', 110000, 35, '2kg', 2),
 (8, 4.4, 'Thức ăn khô vị hải sản cho mèo', 'Seafood Flavor Cat Dry Food', 105000, 80, '3kg', 3);

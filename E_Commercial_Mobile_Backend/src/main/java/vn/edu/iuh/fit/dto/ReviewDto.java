@@ -18,4 +18,5 @@ public class ReviewDto implements Serializable {
     float rating;
     String comment;
     LocalDate reviewDate;
+    UserDto user;
 }

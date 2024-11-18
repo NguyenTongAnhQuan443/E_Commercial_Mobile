@@ -42,7 +42,7 @@ const cartSlice = createSlice({
             }
         }
 
-    }
+    },
 });
 
 export const { addToCart, removeFromCart, changeQuantity, decreaseQuantity, increaseQuantity } = cartSlice.actions;

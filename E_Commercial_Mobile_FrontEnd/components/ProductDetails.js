@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../reduxToolkit/cartSlice';
+import { addToCart } from '../reduxToolkit/slices/cartSlice';
 import { Alert } from 'react-native';
 
 
