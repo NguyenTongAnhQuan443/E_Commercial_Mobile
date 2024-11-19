@@ -1,66 +1,118 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React from 'react'
 
-const SignUp = () => {
+const SignUp = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
-            {/* View  - 1  */}
-            <View style={{ flex: 2 }}>
-
-                {/* View - Welcome */}
-                <View style={{ flex: 3, justifyContent: 'flex-end', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 30, color: 'white', fontWeight: 'bold' }}>Welcome to tradly</Text>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.header}>
+                    <Text style={styles.headerText}>Welcome to FLEYPET</Text>
+                    <Text style={styles.subHeaderText}>Đăng ký tài khoản</Text>
                 </View>
 
-                {/* View - Text Login */}
-                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'white', fontSize: 20 }}>Signup to your account</Text>
-                </View>
-
-            </View>
-
-            {/* View - 2 */}
-            <View style={{ flex: 5 }}>
-
-                {/* View - Input  */}
-                <View style={{ flex: 4, justifyContent: 'space-around', alignItems: 'center' }}>
-                    <TextInput style={{ borderWidth: 1, width: '85%', height: '15%', borderRadius: 30, borderColor: 'white', paddingLeft: 20, fontSize: 18, color: 'white' }} placeholder='First Name' placeholderTextColor='white'></TextInput>
-                    <TextInput style={{ borderWidth: 1, width: '85%', height: '15%', borderRadius: 30, borderColor: 'white', paddingLeft: 20, fontSize: 18, color: 'white' }} placeholder='Last Name' placeholderTextColor='white' ></TextInput>
-                    <TextInput style={{ borderWidth: 1, width: '85%', height: '15%', borderRadius: 30, borderColor: 'white', paddingLeft: 20, fontSize: 18, color: 'white' }} placeholder='Email/Mobile Number' placeholderTextColor='white' ></TextInput>
-                    <TextInput style={{ borderWidth: 1, width: '85%', height: '15%', borderRadius: 30, borderColor: 'white', paddingLeft: 20, fontSize: 18, color: 'white' }} placeholder='Password' placeholderTextColor='white' ></TextInput>
-                    <TextInput style={{ borderWidth: 1, width: '85%', height: '15%', borderRadius: 30, borderColor: 'white', paddingLeft: 20, fontSize: 18, color: 'white' }} placeholder='Re-enter Password' placeholderTextColor='white' ></TextInput>
-                </View>
-
-                {/* Button - Create */}
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width: '90%', height: '55%', backgroundColor: 'white', borderRadius: 20 }}>
-                        <TouchableOpacity style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#33907C' }}>Create</Text>
+                <View style={styles.form}>
+                    <TextInput style={styles.input} placeholder="Họ" placeholderTextColor="#7f8c8d" />
+                    <TextInput style={styles.input} placeholder="Tên" placeholderTextColor="#7f8c8d" />
+                    <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#7f8c8d" />
+                    <TextInput style={styles.input} placeholder="Mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
+                    <TextInput style={styles.input} placeholder="Nhập lại mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
+                    <TouchableOpacity style={styles.signUpButton}>
+                        <Text style={styles.signUpButtonText}>Tạo tài khoản</Text>
+                    </TouchableOpacity>
+                    <View style={styles.signInContainer}>
+                        <Text style={styles.signInText}>Đã có tài khoản?</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                            <Text style={styles.signInLink}> Đăng nhập ngay</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-
-
-                {/* View - SIgn in */}
-                <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 18, color: 'white' }}>Have an account ?</Text>
-                        <TouchableOpacity>
-                            <Text style={{ fontSize: 18, color: 'white', fontWeight: 'bold' }}> Sign in</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
+            </ScrollView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
-export default SignUp
+export default SignUp;
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#33907C'
-    }
-})
+        backgroundColor: '#f1f2f6',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+    },
+    header: {
+        backgroundColor: '#33907C',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 60,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+    },
+    headerText: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+    subHeaderText: {
+        fontSize: 18,
+        color: 'white',
+        marginTop: 10,
+    },
+    form: {
+        flex: 1,
+        paddingHorizontal: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: 20,
+    },
+    input: {
+        width: '100%',
+        height: 50,
+        backgroundColor: 'white',
+        borderRadius: 25,
+        paddingHorizontal: 20,
+        fontSize: 16,
+        color: '#2d3436',
+        marginBottom: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
+    },
+    signUpButton: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#33907C',
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    signUpButtonText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+    signInContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    signInText: {
+        fontSize: 16,
+        color: '#7f8c8d',
+    },
+    signInLink: {
+        fontSize: 16,
+        color: '#33907C',
+        fontWeight: 'bold',
+    },
+});

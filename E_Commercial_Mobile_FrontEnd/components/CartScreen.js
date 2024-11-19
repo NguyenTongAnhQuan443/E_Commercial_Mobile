@@ -4,14 +4,17 @@ import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/slices/cartSlice';
+import { convertToCurrency } from '../models/util';
 
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
 
     const dispatch = useDispatch();
-    const cart = useSelector(state => state.cart.items);
+    const cart = useSelector(state => state.cart.cartItems);
+    const totalPrice = useSelector(state => state.cart.totalPrices);
 
+    console.log(cartItems);
     // Set cart items
     useEffect(() => {
         setCartItems(cart);
@@ -19,27 +22,22 @@ const CartScreen = () => {
 
     // Calculate total
     useEffect(() => {
-        let total = 0;
-        cartItems.forEach(item => {
-            total += item.price * item.quantity;
-        });
-
-        setTotal(total);
-    }, [cartItems]);
+        setTotal(totalPrice);
+    }, [totalPrice]);
 
 
     const renderCartItems = (item) => {
         return (
             <View key={item.id} style={styles.cartItem}>
                 <View style={styles.cartItemImageContainer}>
-                    <Image source={item.image} style={styles.cartItemImage} />
+                    <Image source={{uri: item.product.images[0].imageUri}} style={styles.cartItemImage} />
                 </View>
                 <View style={styles.cartItemDetails}>
                     <Text style={styles.cartItemTitle}>
-                        {item.title}
+                        {item.product.name}
                     </Text>
                     <Text style={styles.cartItemWeight}>
-                        {item.weight}
+                        {item.product.weight}
                     </Text>
                     <View style={styles.cartItemQuantity}>
                         <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(decreaseQuantity(item))}>
@@ -48,7 +46,7 @@ const CartScreen = () => {
                         <TextInput
                             value={item.quantity.toString()}
                             style={styles.quantityInput}
-                            onChangeText={(text) => dispatch(changeQuantity({ id: item.id, text }))}
+                            onChangeText={(text) => dispatch(changeQuantity({...item, quantity: parseInt(text)}))}
                             keyboardType='numeric'
                         />
                         <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(increaseQuantity(item))}>
@@ -62,7 +60,7 @@ const CartScreen = () => {
                             <Icon name='x' size={20} color={'gray'} />
                         </TouchableOpacity>
                         <Text style={styles.cartItemPriceText}>
-                            ${item.price}
+                            {convertToCurrency(item.price)}
                         </Text>
                     </View>
                 </View>
@@ -82,7 +80,7 @@ const CartScreen = () => {
                         showsVerticalScrollIndicator={false}
                         data={cartItems}
                         renderItem={({ item }) => renderCartItems(item)}
-                        keyExtractor={item => item.id.toString()}
+                        keyExtractor={item => item.product.id.toString()}
                     />
                 ) : (
                     <View style={styles.emptyCart}>
@@ -97,7 +95,7 @@ const CartScreen = () => {
                         Go to Checkout
                     </Text>
                     <Text style={styles.footerTotal}>
-                        ${total.toFixed(2)}
+                        {convertToCurrency(total)}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -144,6 +142,7 @@ const styles = StyleSheet.create({
     },
     cartItemImage: {
         width: 75,
+        height: '100%',
         resizeMode: 'contain',
     },
     cartItemDetails: {
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
     },
     quantityInput: {
         marginHorizontal: 20,
-        width: '10%',
+        width: '15%',
         textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',

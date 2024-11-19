@@ -9,10 +9,11 @@ import { addToCart } from '../reduxToolkit/slices/cartSlice';
 import { fetchProducts, getProductById, getProductBestSeller, getProductByCategoryId, getProductExclusiveOffer } from '../reduxToolkit/slices/productSlice';
 import { fetchCategories } from '../reduxToolkit/slices/categorySlice';
 import { convertToCurrency } from '../models/util';
+import CartItemlModel from '../models/CartItemModel';
 
-const ManageTaskScreen = ({navigation}) => {
+const ManageTaskScreen = ({ navigation }) => {
 
-    const items =  useSelector(state => state.product.products);
+    const items = useSelector(state => state.product.products);
     const categories = useSelector(state => state.category.categories);
     const bestSeller = useSelector(state => state.product.productBestSeller);
     const exclusiveOffer = useSelector(state => state.product.productExclusiveOffer);
@@ -46,7 +47,7 @@ const ManageTaskScreen = ({navigation}) => {
     const dispatch = useDispatch();
 
     const handleAddToCart = (item) => {
-        dispatch(addToCart({ ...item, quantity: 1 }));
+        dispatch(addToCart({product: item, quantity: 1, price: item.price}));
         Alert.alert('Success', 'Item added to cart');
     }
 
@@ -54,7 +55,7 @@ const ManageTaskScreen = ({navigation}) => {
         return (
             <View key={index} style={styles.itemContainer}>
                 <TouchableOpacity style={styles.itemImageContainer} onPress={() => navigation.navigate('ProductDetails', { item })}>
-                    <Image source={{uri: item.images[0].imageUri}} style={styles.itemImage} />
+                    <Image source={{ uri: item.images[0].imageUri }} style={styles.itemImage} />
                 </TouchableOpacity>
                 <View style={styles.itemDetailContainer}>
                     <Text style={styles.itemTitle} numberOfLines={2}>
@@ -158,7 +159,7 @@ const ManageTaskScreen = ({navigation}) => {
                     {
                         categoriesWithColor.map((category, index) => (
                             <TouchableOpacity key={category.id} style={[styles.categoryContainer, { backgroundColor: category.backgroundColor }]} onPress={() => setSelectedCategory(category)}>
-                                <Image source={{uri: category.image}} style={styles.categoryImage} />
+                                <Image source={{ uri: category.image }} style={styles.categoryImage} />
                                 <Text style={styles.categoryText}>
                                     {category.name}
                                 </Text>
