@@ -70,6 +70,15 @@ public class Order {
             CascadeType.DETACH,
             CascadeType.REFRESH
     })
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

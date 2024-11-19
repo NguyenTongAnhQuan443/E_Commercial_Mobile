@@ -24,5 +24,6 @@ public class OrderDto implements Serializable {
     List<OrderDetailDto> orderDetails;
     PaymentMethodDto paymentMethod;
     DeliveryMethodDto deliveryMethod;
+    PromotionDto promotion;
     UserDto user;
 }

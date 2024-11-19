@@ -13,6 +13,7 @@ package vn.edu.iuh.fit.converter;
  */
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import vn.edu.iuh.fit.dto.CategoryDto;
 import vn.edu.iuh.fit.entity.Category;
@@ -21,6 +22,7 @@ import vn.edu.iuh.fit.entity.Category;
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
+    @Mapping(source = "image", target = "image")
     CategoryDto toDto(Category category);
 
     Category toEntity(CategoryDto categoryDto);
