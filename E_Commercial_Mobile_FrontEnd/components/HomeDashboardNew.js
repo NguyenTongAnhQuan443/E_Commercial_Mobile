@@ -58,7 +58,7 @@ const HomeDashboardNew = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name='Signin' component={Signin} />
+      {/* <Tab.Screen name='Signin' component={Signin} /> */}
       <Tab.Screen name='Home' component={HomeStack} />
       <Tab.Screen name='Explore' component={Explore} />
       <Tab.Screen name='Type' component={ProductType} />
