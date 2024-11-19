@@ -43,6 +43,10 @@ const HomeDashboardNew = () => {
             iconName = 'search';
           } else if (route.name === 'Cart') {
             iconName = 'shopping-cart';
+          } else if (route.name === 'Favourite') {
+            iconName = 'heart';
+          } else if (route.name === 'Account') {
+            iconName = 'user';
           }
 
           return (
@@ -61,13 +65,13 @@ const HomeDashboardNew = () => {
       {/* <Tab.Screen name='Signin' component={Signin} /> */}
       <Tab.Screen name='Home' component={HomeStack} />
       <Tab.Screen name='Explore' component={Explore} />
-      <Tab.Screen name='Type' component={ProductType} />
-      <Tab.Screen name='Search' component={SearchScreen} />
+      {/* <Tab.Screen name='Type' component={ProductType} /> */}
+      {/* <Tab.Screen name='Search' component={SearchScreen} /> */}
       <Tab.Screen name='Cart' component={CartScreen} />
-      <Tab.Screen name='Fav' component={FavoritesScreen} />
-      <Tab.Screen name='Acc' component={AccountScreen} />
-      <Tab.Screen name='Or' component={OrderAcceptedScreen} />
-      <Tab.Screen name='Signup' component={SignUp} />
+      <Tab.Screen name='Favourite' component={FavoritesScreen} />
+      <Tab.Screen name='Account' component={AccountScreen} />
+      {/* <Tab.Screen name='Or' component={OrderAcceptedScreen} /> */}
+      {/* <Tab.Screen name='Signup' component={SignUp} /> */}
     </Tab.Navigator>
   )
 }

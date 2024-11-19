@@ -4,6 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Login = ({ navigation }) => {
+
+
     return (
         <SafeAreaView style={styles.container}>
             {/* Header */}
@@ -25,9 +27,13 @@ const Login = ({ navigation }) => {
                     placeholderTextColor="#7f8c8d"
                     secureTextEntry
                 />
-                <TouchableOpacity style={styles.loginButton}>
+                <TouchableOpacity
+                    style={styles.loginButton}
+                    onPress={() => navigation.navigate('Home')}
+                >
                     <Text style={styles.loginButtonText}>Đăng nhập</Text>
                 </TouchableOpacity>
+
 
                 {/* Forgot Password */}
                 <TouchableOpacity>
