@@ -50,5 +50,32 @@ public class ProductRESTController {
         }
     }
 
+    @GetMapping("/by-category/{id}")
+    public ResponseEntity<List<ProductDto>> getProductByCategory(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(productService.getProductByCategory(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/exclusive-offer")
+    public ResponseEntity<List<ProductDto>> getExclusiveOffer() {
+        try {
+            return ResponseEntity.ok(productService.getExclusiveOffer());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/best-seller")
+    public ResponseEntity<List<ProductDto>> getBestSeller() {
+        try {
+            return ResponseEntity.ok(productService.getBestSeller());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }

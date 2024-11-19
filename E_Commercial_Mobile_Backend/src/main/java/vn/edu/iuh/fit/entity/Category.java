@@ -33,4 +33,6 @@ public class Category {
 
     @Column(name = "description", length = 256)
     private String description;
+
+    private String image;
 }

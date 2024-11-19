@@ -21,5 +21,9 @@ import java.util.List;
 public interface ProductService {
     List<ProductDto> getAllProduct();
     ProductDto getProductById(Long id);
+    List<ProductDto> getProductByCategory(Long id);
 
+    List<ProductDto> getBestSeller();
+
+    List<ProductDto> getExclusiveOffer();
 }

@@ -4,56 +4,44 @@ import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../reduxToolkit/cartSlice';
+import { useSelector } from 'react-redux';
+import { addToCart } from '../reduxToolkit/slices/cartSlice';
+import { fetchProducts, getProductById, getProductBestSeller, getProductByCategoryId, getProductExclusiveOffer } from '../reduxToolkit/slices/productSlice';
+import { fetchCategories } from '../reduxToolkit/slices/categorySlice';
+import { convertToCurrency } from '../models/util';
 
 const ManageTaskScreen = ({navigation}) => {
-    const items = [
-        {
-            id: 1,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: 4.99,
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-        {
-            id: 2,
-            title: 'Red Apple',
-            weight: '1kg, Price',
-            price: 4.99,
-            description: 'Apples are nutritious. Apples may be good for weight loss. apples may be good for your heart. As part of a healtful and varied diet.',
-            image: require('../assets/apple.png'),
-        },
-        {
-            id: 3,
-            title: 'Organic Bananas',
-            weight: '7pcs, Price',
-            price: 4.99,
-            description: 'Fresh and organic',
-            image: require('../assets/banana.png'),
-        },
-    ];
 
-    const categories = [
-        {
-            id: 1,
-            title: 'Pulses',
-            image: require('../assets/pulses.png'),
-            backgroundColor: '#fef1e4',
-        },
-        {
-            id: 2,
-            title: 'Rice',
-            image: require('../assets/rice.png'),
-            backgroundColor: '#e5f3ea',
-        },
-        {
-            id: 3,
-            title: 'Rice',
-            image: require('../assets/rice.png'),
-            backgroundColor: '#e5f3ea',
-        },
-    ];
+    const items =  useSelector(state => state.product.products);
+    const categories = useSelector(state => state.category.categories);
+    const bestSeller = useSelector(state => state.product.productBestSeller);
+    const exclusiveOffer = useSelector(state => state.product.productExclusiveOffer);
+    const itemByCategory = useSelector(state => state.product.productByCategory);
+    const [initItemByCategory, setInitItemByCategory] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    const colors = ['#fef1e4', '#e5f3ea', '#FDE8E4', '#F4EBF7'];
+
+    const categoriesWithColor = categories.map((category, index) => ({
+        ...category,
+        backgroundColor: colors[index % colors.length],
+    }));
+
+    useEffect(() => {
+        dispatch(fetchProducts());
+        dispatch(getProductBestSeller());
+        dispatch(getProductExclusiveOffer());
+        dispatch(fetchCategories());
+    }, []);
+
+    useEffect(() => {
+        if (selectedCategory) {
+            dispatch(getProductByCategoryId(selectedCategory.id));
+            setInitItemByCategory(itemByCategory);
+        } else {
+            setInitItemByCategory(items);
+        }
+    }, [selectedCategory, items]);
 
     const dispatch = useDispatch();
 
@@ -66,18 +54,18 @@ const ManageTaskScreen = ({navigation}) => {
         return (
             <View key={index} style={styles.itemContainer}>
                 <TouchableOpacity style={styles.itemImageContainer} onPress={() => navigation.navigate('ProductDetails', { item })}>
-                    <Image source={item.image} style={styles.itemImage} />
+                    <Image source={{uri: item.images[0].imageUri}} style={styles.itemImage} />
                 </TouchableOpacity>
                 <View style={styles.itemDetailContainer}>
-                    <Text style={styles.itemTitle}>
-                        {item.title}
+                    <Text style={styles.itemTitle} numberOfLines={2}>
+                        {item.name}
                     </Text>
                     <Text style={styles.itemWeight}>
                         {item.weight}
                     </Text>
                     <View style={styles.itemPriceContainer}>
                         <Text style={styles.itemPrice}>
-                            ${item.price}
+                            {convertToCurrency(item.price)}
                         </Text>
                         <TouchableOpacity style={styles.itemButton} onPress={() => handleAddToCart(item)}>
                             <Text style={styles.itemButtonText}>
@@ -122,13 +110,14 @@ const ManageTaskScreen = ({navigation}) => {
                         See all
                     </Text>
                 </View>
+                {/* Exclusive Offer */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     style={styles.itemListContainer}
                 >
                     {
-                        items.map((item, index) => (
+                        exclusiveOffer.map((item, index) => (
                             renderItem(item, index)
                         ))
                     }
@@ -141,13 +130,14 @@ const ManageTaskScreen = ({navigation}) => {
                         See all
                     </Text>
                 </View>
+                {/* Best Seller */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     style={styles.itemListContainer}
                 >
                     {
-                        items.map((item, index) => (
+                        bestSeller.map((item, index) => (
                             renderItem(item, index)
                         ))
                     }
@@ -166,13 +156,13 @@ const ManageTaskScreen = ({navigation}) => {
                     style={styles.categoryListContainer}
                 >
                     {
-                        categories.map((category, index) => (
-                            <View key={index} style={[styles.categoryContainer, { backgroundColor: category.backgroundColor }]} >
-                                <Image source={category.image} style={styles.categoryImage} />
+                        categoriesWithColor.map((category, index) => (
+                            <TouchableOpacity key={category.id} style={[styles.categoryContainer, { backgroundColor: category.backgroundColor }]} onPress={() => setSelectedCategory(category)}>
+                                <Image source={{uri: category.image}} style={styles.categoryImage} />
                                 <Text style={styles.categoryText}>
-                                    {category.title}
+                                    {category.name}
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
                         ))
                     }
                 </ScrollView>
@@ -182,7 +172,7 @@ const ManageTaskScreen = ({navigation}) => {
                     style={styles.itemListContainer}
                 >
                     {
-                        items.map((item, index) => (
+                        initItemByCategory.map((item, index) => (
                             renderItem(item, index)
                         ))
                     }
@@ -277,8 +267,8 @@ const styles = StyleSheet.create({
         width: '90%',
     },
     itemContainer: {
-        width: '38%',
-        height: 250,
+        maxWidth: 200,
+        maxHeight: 300,
         backgroundColor: '#fff',
         borderRadius: 15,
         marginRight: 10,
@@ -294,7 +284,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     itemImage: {
-        width: '100%',
+        maxWidth: '100%',
         height: '100%',
         borderRadius: 10,
         resizeMode: 'contain',
@@ -303,6 +293,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     itemTitle: {
+        overflow: 'hidden',
         fontSize: 18,
         fontWeight: '600',
     },
@@ -341,11 +332,12 @@ const styles = StyleSheet.create({
         width: '90%',
     },
     categoryContainer: {
-        width: '50%',
-        height: 120,
+        maxWidth: '30%',
+        height: 100,
         borderRadius: 15,
         marginRight: 10,
-        padding: 10,
+        padding: 8,
+        paddingEnd: 15,
         borderWidth: 1,
         borderColor: '#f0f0f0',
         flexDirection: 'row',
@@ -353,12 +345,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     categoryImage: {
-        width: 70,
-        height: 70,
+        width: 60,
+        height: 60,
         marginLeft: 10,
     },
     categoryText: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: '400',
         marginTop: 5,
         marginLeft: 10,

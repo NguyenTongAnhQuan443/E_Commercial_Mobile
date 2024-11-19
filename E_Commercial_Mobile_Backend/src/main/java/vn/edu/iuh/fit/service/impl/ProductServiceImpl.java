@@ -18,6 +18,7 @@ import vn.edu.iuh.fit.dto.ProductDto;
 import vn.edu.iuh.fit.repository.ProductRepository;
 import vn.edu.iuh.fit.service.ProductService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,5 +40,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductById(Long id) {
         return productMapper.toDto(productRepository.findById(id).orElseThrow());
+    }
+
+    @Override
+    public List<ProductDto> getProductByCategory(Long id) {
+        return productRepository.findByCategory_Id(id).stream().map(productMapper::toDto).toList();
+    }
+
+    @Override
+    public List<ProductDto> getBestSeller() {
+        return productRepository.findAll().stream()
+                .map(productMapper::toDto)
+                .sorted(Comparator.comparing(ProductDto::getPrice))  // Sắp xếp theo giá
+                .toList();
+    }
+
+    @Override
+    public List<ProductDto> getExclusiveOffer() {
+        return productRepository.findAll().stream().map(productMapper::toDto).toList();
     }
 }
