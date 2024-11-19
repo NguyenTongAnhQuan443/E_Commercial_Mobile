@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS `delivery_method` (
 -- Dumping data for table ecommerce.delivery_method: ~3 rows (approximately)
 DELETE FROM `delivery_method`;
 INSERT INTO `delivery_method` (`id`, `description`, `fee`, `is_active`, `name`) VALUES
-	(1, 'Giao hàng nhanh trong 1 ngày', 30000, b'1', 'Fast Delivery'),
-	(2, 'Giao hàng tiêu chuẩn', 15000, b'1', 'Standard Delivery'),
+	(1, 'Giao hàng nhanh trong 1 ngày', 50000, b'1', 'Express Delivery'),
+	(2, 'Giao hàng tiêu chuẩn', 20000, b'1', 'Standard Delivery'),
 	(3, 'Giao hàng miễn phí cho đơn trên 500k', 0, b'1', 'Free Delivery');
 
 -- Dumping structure for table ecommerce.image

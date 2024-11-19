@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/slices/cartSlice';
 import { convertToCurrency } from '../models/util';
-import { CheckoutModal } from './checkout-modal';
+import { CheckoutModal } from './Checkout-modal';
 
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -20,8 +20,6 @@ const CartScreen = () => {
     useEffect(() => {
         setCartItems(cart);
     }, [cart]);
-
-    console.log(total);
 
     // Calculate total
     useEffect(() => {

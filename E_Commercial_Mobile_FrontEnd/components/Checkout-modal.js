@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert, Modal } from 'react-native';
 import { X, ChevronRight, CreditCard, Truck, Wallet, ArrowLeft } from 'lucide-react-native';
 import { convertToCurrency } from '../models/util';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchPromotions } from '../reduxToolkit/slices/promotionSlice';
+
 
 // Mock data for delivery and payment methods
 const deliveryMethods = [
@@ -14,15 +17,6 @@ const paymentMethods = [
   { id: 'cash', name: 'Cash on Delivery', icon: Wallet },
 ];
 
-// Mock function to validate promo code
-const validatePromoCode = (code: any) => {
-  const validCodes = {
-    'SUMMER10': 10,
-    'WELCOME20': 20,
-  };
-  return validCodes[code] || 0;
-};
-
 // Step components
 const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
   const [address, setAddress] = useState({
@@ -32,10 +26,10 @@ const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
     zipCode: '',
   });
   const [method, setMethod] = useState(selectedMethod || deliveryMethods[0].id);
-  const [errors, setErrors] = useState({}) as any;
+  const [errors, setErrors] = useState({});
 
   const validateAddress = () => {
-    const newErrors = {} as any;
+    const newErrors = {};
     if (!address.street.trim()) {
         newErrors.street = 'Street Address is required';
     }
@@ -133,10 +127,10 @@ const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
     expiry: '',
     cvv: '',
   });
-  const [errors, setErrors] = useState({}) as any;
+  const [errors, setErrors] = useState({});
 
   const validatePayment = () => {
-    const newErrors = {} as any;
+    const newErrors = {};
     if (method === 'credit_card') {
       if (!cardDetails.number.trim()) newErrors.number = 'Card number is required';
       if (!cardDetails.expiry.trim()) newErrors.expiry = 'Expiry date is required';
@@ -218,9 +212,29 @@ const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
 };
 
 const PromoCodeStep = ({ onSave, onCancel, currentPromo }) => {
+  
+  const promoCodes = useSelector(state => state.promotion.promotions);
+  
   const [promoCode, setPromoCode] = useState(currentPromo || '');
   const [discount, setDiscount] = useState(0);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    dipatch(fetchPromotions());
+  }, []);
+
+  const dipatch = useDispatch();
+
+    const validatePromoCode = (code) => {
+      console.log("Promo Codes: ", promoCodes);
+      const discount = promoCodes.find(promo => promo.code === code &&
+        new Date(promo.startDate) <= new Date() &&
+        new Date(promo.endDate) >= new Date() &&
+        promo.active === true
+      );
+
+      return discount ? discount.discount : 0;
+    };
 
   const applyPromoCode = () => {
     const discountPercentage = validatePromoCode(promoCode);

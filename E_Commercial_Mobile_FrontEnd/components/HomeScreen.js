@@ -9,7 +9,6 @@ import { addToCart } from '../reduxToolkit/slices/cartSlice';
 import { fetchProducts, getProductById, getProductBestSeller, getProductByCategoryId, getProductExclusiveOffer } from '../reduxToolkit/slices/productSlice';
 import { fetchCategories } from '../reduxToolkit/slices/categorySlice';
 import { convertToCurrency } from '../models/util';
-import CartItemlModel from '../models/CartItemModel';
 
 const ManageTaskScreen = ({ navigation }) => {
 
