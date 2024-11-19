@@ -5,20 +5,23 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/slices/cartSlice';
 import { convertToCurrency } from '../models/util';
+import { CheckoutModal } from './checkout-modal';
 
 const CartScreen = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
+    const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
 
     const dispatch = useDispatch();
     const cart = useSelector(state => state.cart.cartItems);
     const totalPrice = useSelector(state => state.cart.totalPrices);
 
-    console.log(cartItems);
     // Set cart items
     useEffect(() => {
         setCartItems(cart);
     }, [cart]);
+
+    console.log(total);
 
     // Calculate total
     useEffect(() => {
@@ -90,7 +93,7 @@ const CartScreen = () => {
                 <View style={styles.divider} />
             </View>
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton}>
+                <TouchableOpacity style={styles.footerButton} onPress={() => setIsCheckoutModalVisible(true)}>
                     <Text style={styles.footerText}>
                         Go to Checkout
                     </Text>
@@ -99,6 +102,11 @@ const CartScreen = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <CheckoutModal 
+                isVisible={isCheckoutModalVisible}
+                onClose={() => setIsCheckoutModalVisible(false)}
+                initialTotalCost={total}
+            />
         </SafeAreaView>
     );
 }

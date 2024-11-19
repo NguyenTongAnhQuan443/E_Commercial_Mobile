@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert, Modal } from 'react-native';
-import { X, ChevronRight, CreditCard, Truck, Wallet } from 'lucide-react-native';
+import { X, ChevronRight, CreditCard, Truck, Wallet, ArrowLeft } from 'lucide-react-native';
+import { convertToCurrency } from '../models/util';
 
 // Mock data for delivery and payment methods
 const deliveryMethods = [
-  { id: 'standard', name: 'Standard Delivery', price: 5 },
-  { id: 'express', name: 'Express Delivery', price: 10 },
+  { id: 'standard', name: 'Standard Delivery', price: 20000 },
+  { id: 'express', name: 'Express Delivery', price: 50000 },
 ];
 
 const paymentMethods = [
@@ -14,7 +15,7 @@ const paymentMethods = [
 ];
 
 // Mock function to validate promo code
-const validatePromoCode = (code) => {
+const validatePromoCode = (code: any) => {
   const validCodes = {
     'SUMMER10': 10,
     'WELCOME20': 20,
@@ -23,7 +24,7 @@ const validatePromoCode = (code) => {
 };
 
 // Step components
-const DeliveryStep = ({ onSave, selectedMethod }) => {
+const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
   const [address, setAddress] = useState({
     street: '',
     city: '',
@@ -31,10 +32,40 @@ const DeliveryStep = ({ onSave, selectedMethod }) => {
     zipCode: '',
   });
   const [method, setMethod] = useState(selectedMethod || deliveryMethods[0].id);
+  const [errors, setErrors] = useState({}) as any;
+
+  const validateAddress = () => {
+    const newErrors = {} as any;
+    if (!address.street.trim()) {
+        newErrors.street = 'Street Address is required';
+    }
+    if (!address.city.trim()) {
+        newErrors.city = 'City is required';
+    }
+    if (!address.state.trim()) {
+        newErrors.state = 'State is required';
+    }
+    if (!address.zipCode.trim()) {
+        newErrors.zipCode = 'ZIP Code is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (validateAddress()) {
+      onSave({ address, method });
+    }
+  };
 
   return (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Delivery Details</Text>
+      <View style={styles.stepHeader}>
+        <TouchableOpacity onPress={onCancel} style={styles.backButton}>
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.stepTitle}>Delivery Details</Text>
+      </View>
       <Text style={styles.sectionTitle}>Delivery Method</Text>
       {deliveryMethods.map((deliveryMethod) => (
         <TouchableOpacity
@@ -52,52 +83,83 @@ const DeliveryStep = ({ onSave, selectedMethod }) => {
       ))}
       <Text style={styles.sectionTitle}>Address</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, errors.street && styles.inputError]}
         placeholder="Street Address"
         value={address.street}
         onChangeText={(text) => setAddress({ ...address, street: text })}
       />
+      {errors.street && <Text style={styles.errorText}>{errors.street}</Text>}
       <TextInput
-        style={styles.input}
+        style={[styles.input, errors.city && styles.inputError]}
         placeholder="City"
         value={address.city}
         onChangeText={(text) => setAddress({ ...address, city: text })}
       />
+      {errors.city && <Text style={styles.errorText}>{errors.city}</Text>}
       <View style={styles.rowContainer}>
-        <TextInput
-          style={[styles.input, { flex: 1, marginRight: 10 }]}
-          placeholder="State"
-          value={address.state}
-          onChangeText={(text) => setAddress({ ...address, state: text })}
-        />
-        <TextInput
-          style={[styles.input, { flex: 1 }]}
-          placeholder="ZIP Code"
-          value={address.zipCode}
-          onChangeText={(text) => setAddress({ ...address, zipCode: text })}
-        />
+        <View style={{ flex: 1, marginRight: 10 }}>
+          <TextInput
+            style={[styles.input, errors.state && styles.inputError]}
+            placeholder="State"
+            value={address.state}
+            onChangeText={(text) => setAddress({ ...address, state: text })}
+          />
+          {errors.state && <Text style={styles.errorText}>{errors.state}</Text>}
+        </View>
+        <View style={{ flex: 1 }}>
+          <TextInput
+            style={[styles.input, errors.zipCode && styles.inputError]}
+            placeholder="ZIP Code"
+            value={address.zipCode}
+            onChangeText={(text) => setAddress({ ...address, zipCode: text })}
+          />
+          {errors.zipCode && <Text style={styles.errorText}>{errors.zipCode}</Text>}
+        </View>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => onSave({ address, method })}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save Delivery Details</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const PaymentStep = ({ onSave, selectedMethod }) => {
+const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
   const [method, setMethod] = useState(selectedMethod || paymentMethods[0].id);
   const [cardDetails, setCardDetails] = useState({
     number: '',
     expiry: '',
     cvv: '',
   });
+  const [errors, setErrors] = useState({}) as any;
+
+  const validatePayment = () => {
+    const newErrors = {} as any;
+    if (method === 'credit_card') {
+      if (!cardDetails.number.trim()) newErrors.number = 'Card number is required';
+      if (!cardDetails.expiry.trim()) newErrors.expiry = 'Expiry date is required';
+      if (!cardDetails.cvv.trim()) newErrors.cvv = 'CVV is required';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (validatePayment()) {
+      onSave({ method, cardDetails });
+    }
+  };
 
   return (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Payment Method</Text>
+      <View style={styles.stepHeader}>
+        <TouchableOpacity onPress={onCancel} style={styles.backButton}>
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.stepTitle}>Payment Method</Text>
+      </View>
       {paymentMethods.map((paymentMethod) => (
         <TouchableOpacity
           key={paymentMethod.id}
@@ -114,70 +176,91 @@ const PaymentStep = ({ onSave, selectedMethod }) => {
       {method === 'credit_card' && (
         <>
           <TextInput
-            style={styles.input}
+            style={[styles.input, errors.number && styles.inputError]}
             placeholder="Card Number"
             value={cardDetails.number}
             onChangeText={(text) => setCardDetails({ ...cardDetails, number: text })}
             keyboardType="numeric"
           />
+          {errors.number && <Text style={styles.errorText}>{errors.number}</Text>}
           <View style={styles.rowContainer}>
-            <TextInput
-              style={[styles.input, { flex: 1, marginRight: 10 }]}
-              placeholder="MM/YY"
-              value={cardDetails.expiry}
-              onChangeText={(text) => setCardDetails({ ...cardDetails, expiry: text })}
-            />
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              placeholder="CVV"
-              value={cardDetails.cvv}
-              onChangeText={(text) => setCardDetails({ ...cardDetails, cvv: text })}
-              keyboardType="numeric"
-              secureTextEntry
-            />
+            <View style={{ flex: 1, marginRight: 10 }}>
+              <TextInput
+                style={[styles.input, errors.expiry && styles.inputError]}
+                placeholder="MM/YY"
+                value={cardDetails.expiry}
+                onChangeText={(text) => setCardDetails({ ...cardDetails, expiry: text })}
+              />
+              {errors.expiry && <Text style={styles.errorText}>{errors.expiry}</Text>}
+            </View>
+            <View style={{ flex: 1 }}>
+              <TextInput
+                style={[styles.input, errors.cvv && styles.inputError]}
+                placeholder="CVV"
+                value={cardDetails.cvv}
+                onChangeText={(text) => setCardDetails({ ...cardDetails, cvv: text })}
+                keyboardType="numeric"
+                secureTextEntry
+              />
+              {errors.cvv && <Text style={styles.errorText}>{errors.cvv}</Text>}
+            </View>
           </View>
         </>
       )}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => onSave({ method, cardDetails })}
-      >
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save Payment Method</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const PromoCodeStep = ({ onSave, currentPromo }) => {
+const PromoCodeStep = ({ onSave, onCancel, currentPromo }) => {
   const [promoCode, setPromoCode] = useState(currentPromo || '');
   const [discount, setDiscount] = useState(0);
+  const [error, setError] = useState('');
 
   const applyPromoCode = () => {
     const discountPercentage = validatePromoCode(promoCode);
     if (discountPercentage > 0) {
       setDiscount(discountPercentage);
+      setError('');
       Alert.alert('Success', `Promo code applied! ${discountPercentage}% discount`);
       onSave({ promoCode, discount: discountPercentage });
     } else {
-      Alert.alert('Invalid Code', 'The entered promo code is invalid.');
+      setError('Invalid promo code. Please try again.');
     }
   };
 
   return (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Promo Code</Text>
+        <View style={styles.stepHeader}>
+            <TouchableOpacity onPress={onCancel} style={styles.backButton}>
+                <ArrowLeft size={24} color="#000" />
+            </TouchableOpacity>
+            <Text style={styles.stepTitle}>Promo Code</Text>
+        </View>
       <TextInput
         style={styles.input}
         placeholder="Enter Promo Code"
         value={promoCode}
-        onChangeText={setPromoCode}
+        onChangeText={(text) => {
+          setPromoCode(text);
+          setError('');
+        }}
       />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <TouchableOpacity style={styles.button} onPress={applyPromoCode}>
         <Text style={styles.buttonText}>Apply Code</Text>
       </TouchableOpacity>
       {discount > 0 && (
         <Text style={styles.discountText}>{discount}% discount applied</Text>
       )}
+      <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -200,12 +283,12 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
     if (checkoutData.promoCode && checkoutData.promoCode.discount) {
       newTotal *= (1 - checkoutData.promoCode.discount / 100);
     }
-    setTotalCost(newTotal.toFixed(2));
+    setTotalCost(newTotal);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     updateTotalCost();
-  }, [checkoutData]);
+  }, [checkoutData, initialTotalCost]);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -217,6 +300,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
               setCurrentStep(null);
             }}
             selectedMethod={checkoutData.delivery?.method}
+            onCancel={() => setCurrentStep(null)}
           />
         );
       case 'payment':
@@ -227,6 +311,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
               setCurrentStep(null);
             }}
             selectedMethod={checkoutData.payment?.method}
+            onCancel={() => setCurrentStep(null)}
           />
         );
       case 'promo':
@@ -237,6 +322,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
               setCurrentStep(null);
             }}
             currentPromo={checkoutData.promoCode?.promoCode}
+            onCancel={() => setCurrentStep(null)}
           />
         );
       default:
@@ -283,7 +369,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
 
             <View style={styles.totalContainer}>
               <Text style={styles.totalLabel}>Total Cost</Text>
-              <Text style={styles.totalAmount}>${totalCost}</Text>
+              <Text style={styles.totalAmount}>{convertToCurrency(totalCost)}</Text>
             </View>
 
             <Text style={styles.terms}>
@@ -342,7 +428,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: '80%',
+    height: '50%',
   },
   header: {
     flexDirection: 'row',
@@ -444,7 +530,8 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 5,
+    width: '100%',
   },
   button: {
     backgroundColor: '#4CAF50',
@@ -485,5 +572,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#4CAF50',
     fontWeight: '600',
+},
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+  },
+  cancelButton: {
+    marginTop: 10,
+    padding: 10,
+  },
+  cancelButtonText: {
+    color: '#666',
+    textAlign: 'center',
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  backButton: {
+    marginRight: 10,
+  },
+  stepHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });
