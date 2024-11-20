@@ -13,7 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @ToString
 public class OrderDetailDto implements Serializable {
-    long orderDetailID;
-    int quantity;
-    double salePrice;
+    private Long orderId;
+    private Long productId;
+    private int quantity;
+    private double salePrice;
 }

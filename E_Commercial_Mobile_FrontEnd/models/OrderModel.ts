@@ -1,22 +1,22 @@
+import CreditCardModel from "./CreditCardModel";
 import OrderDetailModel from "./OrderDetailModel";
 
 class OrderModel {
-    id: number;
     createdDate: Date;
     shippingAddress: string;
     shippingDate: Date;
     shippingFee: number;
     status: string;
     orderDetails: OrderDetailModel[];
-    paymentMethod: string;
-    deliveryMethod: string;
+    paymentMethod: number;
+    creditCard: CreditCardModel;
+    deliveryMethod: number;
     promotion: string;
-    user: string; // Thông tin người dùng, có thể là UserDto
+    user: number;
   
-    constructor(id: number, createdDate: Date, shippingAddress: string, shippingDate: Date, 
-      shippingFee: number, status: string, orderDetails: OrderDetailModel[], paymentMethod: string, 
-      deliveryMethod: string, promotion: string, user: string) {
-      this.id = id;
+    constructor(createdDate: Date, shippingAddress: string, shippingDate: Date, 
+      shippingFee: number, status: string, orderDetails: OrderDetailModel[], paymentMethod: number, 
+      creaditCard: CreditCardModel, deliveryMethod: number, promotion: string, user: number) {
       this.createdDate = createdDate;
       this.shippingAddress = shippingAddress;
       this.shippingDate = shippingDate;
@@ -24,6 +24,7 @@ class OrderModel {
       this.status = status;
       this.orderDetails = orderDetails;
       this.paymentMethod = paymentMethod;
+      this.creditCard = creaditCard;
       this.deliveryMethod = deliveryMethod;
       this.promotion = promotion;
       this.user = user;

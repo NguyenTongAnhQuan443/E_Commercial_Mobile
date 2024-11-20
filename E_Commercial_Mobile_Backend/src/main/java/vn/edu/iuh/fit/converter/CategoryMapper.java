@@ -22,7 +22,6 @@ import vn.edu.iuh.fit.entity.Category;
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    @Mapping(source = "image", target = "image")
     CategoryDto toDto(Category category);
 
     Category toEntity(CategoryDto categoryDto);

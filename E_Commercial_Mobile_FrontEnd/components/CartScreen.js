@@ -104,6 +104,7 @@ const CartScreen = () => {
                 isVisible={isCheckoutModalVisible}
                 onClose={() => setIsCheckoutModalVisible(false)}
                 initialTotalCost={total}
+                items={cartItems}
             />
         </SafeAreaView>
     );

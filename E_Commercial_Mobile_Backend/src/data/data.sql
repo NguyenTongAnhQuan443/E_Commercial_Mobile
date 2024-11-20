@@ -52,7 +52,7 @@ DELETE FROM `delivery_method`;
 INSERT INTO `delivery_method` (`id`, `description`, `fee`, `is_active`, `name`) VALUES
 	(1, 'Giao hàng nhanh trong 1 ngày', 50000, b'1', 'Express Delivery'),
 	(2, 'Giao hàng tiêu chuẩn', 20000, b'1', 'Standard Delivery'),
-	(3, 'Giao hàng miễn phí cho đơn trên 500k', 0, b'1', 'Free Delivery');
+	(3, 'Giao hàng miễn phí cho đơn trên 500k', 0, b'0', 'Free Delivery');
 
 -- Dumping structure for table ecommerce.image
 CREATE TABLE IF NOT EXISTS `image` (
@@ -124,9 +124,9 @@ CREATE TABLE IF NOT EXISTS `order_detail` (
 
 -- Dumping data for table ecommerce.order_detail: ~2 rows (approximately)
 DELETE FROM `order_detail`;
-INSERT INTO `order_detail` (`order_detail_id`, `quantity`, `sale_price`, `order_id`, `product_id`) VALUES
-	(1, 2, 60, 1, 1),
-	(2, 1, 25, 2, 2);
+INSERT INTO `order_detail` (`quantity`, `sale_price`, `order_id`, `product_id`) VALUES
+	(2, 60, 1, 1),
+	(1, 25, 2, 2);
 
 -- Dumping structure for table ecommerce.payment_method
 CREATE TABLE IF NOT EXISTS `payment_method` (

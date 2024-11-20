@@ -61,6 +61,15 @@ public class Order {
             CascadeType.DETACH,
             CascadeType.REFRESH
     })
+    @JoinColumn(name = "credit_card_detail_id")
+    private CreditCardDetail creditCardDetail;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE,
+            CascadeType.DETACH,
+            CascadeType.REFRESH
+    })
     @JoinColumn(name = "delivery_method_id")
     private DeliveryMethod deliveryMethod;
 

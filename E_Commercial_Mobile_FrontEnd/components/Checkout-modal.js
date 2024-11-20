@@ -1,32 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet, Alert, Modal } from 'react-native';
 import { X, ChevronRight, CreditCard, Truck, Wallet, ArrowLeft } from 'lucide-react-native';
-import { convertToCurrency } from '../models/util';
+import { convertToCurrency, getFullAddress } from '../models/util';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPromotions } from '../reduxToolkit/slices/promotionSlice';
+import { fetchDeliveryMethods } from '../reduxToolkit/slices/deliverySlice';
+import { fetchPaymentMethods } from '../reduxToolkit/slices/paymentSlice';
+import OrderDetailModel from '../models/OrderDetailModel';
+import OrderModel from '../models/OrderModel';
+import { createOrder } from '../reduxToolkit/slices/orderSlice';
+import CreditCardModel from '../models/CreditCardModel';
+import { clearCart } from '../reduxToolkit/slices/cartSlice';
 
 
 // Mock data for delivery and payment methods
-const deliveryMethods = [
-  { id: 'standard', name: 'Standard Delivery', price: 20000 },
-  { id: 'express', name: 'Express Delivery', price: 50000 },
-];
+// const deliveryMethods = [
+//   { id: 'standard', name: 'Standard Delivery', price: 20000 },
+//   { id: 'express', name: 'Express Delivery', price: 50000 },
+// ];
 
-const paymentMethods = [
-  { id: 'credit_card', name: 'Credit Card', icon: CreditCard },
-  { id: 'cash', name: 'Cash on Delivery', icon: Wallet },
-];
+// const paymentMethods = [
+//   { id: 'credit_card', name: 'Credit Card', icon: CreditCard },
+//   { id: 'cash', name: 'Cash on Delivery', icon: Wallet },
+// ];
 
 // Step components
-const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
-  const [address, setAddress] = useState({
+const DeliveryStep = ({ onSave, onCancel, initialData }) => {
+  const [address, setAddress] = useState(initialData?.address || {
     street: '',
     city: '',
     state: '',
     zipCode: '',
   });
-  const [method, setMethod] = useState(selectedMethod || deliveryMethods[0].id);
+
+  const deliveryMethods = useSelector(state => state.delivery.deliveryMethods);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDeliveryMethods());
+  }, []);
+
+  const [method, setMethod] = useState(initialData?.method || deliveryMethods[0].id);
   const [errors, setErrors] = useState({});
+
 
   const validateAddress = () => {
     const newErrors = {};
@@ -67,12 +83,13 @@ const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
           style={[
             styles.methodOption,
             method === deliveryMethod.id && styles.selectedMethod,
+            !deliveryMethod.active && styles.disabledButton,
           ]}
-          onPress={() => setMethod(deliveryMethod.id)}
+          onPress={() => deliveryMethod.active && setMethod(deliveryMethod.id)}
         >
           <Truck size={20} color={method === deliveryMethod.id ? '#4CAF50' : '#666'} />
           <Text style={styles.methodName}>{deliveryMethod.name}</Text>
-          <Text style={styles.methodPrice}>${deliveryMethod.price}</Text>
+          <Text style={styles.methodPrice}>{convertToCurrency(deliveryMethod.fee)}</Text>
         </TouchableOpacity>
       ))}
       <Text style={styles.sectionTitle}>Address</Text>
@@ -120,18 +137,31 @@ const DeliveryStep = ({ onSave, onCancel, selectedMethod }) => {
   );
 };
 
-const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
-  const [method, setMethod] = useState(selectedMethod || paymentMethods[0].id);
-  const [cardDetails, setCardDetails] = useState({
+const PaymentStep = ({ onSave, onCancel, initialData }) => {
+
+  const dispatch = useDispatch();
+  const paymentMethods = useSelector(state => state.payment.paymentMethods);
+
+  const [method, setMethod] = useState(initialData?.method || paymentMethods[0].name);
+  const [cardDetails, setCardDetails] = useState(initialData?.cardDetails || {
     number: '',
     expiry: '',
     cvv: '',
   });
   const [errors, setErrors] = useState({});
+  
+  useEffect(() => {
+    dispatch(fetchPaymentMethods());
+  }, []);
+
+  const paymentMethodsWithIcons = paymentMethods.map((method) => ({
+    ...method,
+    icon: method.name === 'Credit Card' ? CreditCard : Wallet,  
+  }));
 
   const validatePayment = () => {
     const newErrors = {};
-    if (method === 'credit_card') {
+    if (method === 'Credit Card') {
       if (!cardDetails.number.trim()) newErrors.number = 'Card number is required';
       if (!cardDetails.expiry.trim()) newErrors.expiry = 'Expiry date is required';
       if (!cardDetails.cvv.trim()) newErrors.cvv = 'CVV is required';
@@ -154,20 +184,20 @@ const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
         </TouchableOpacity>
         <Text style={styles.stepTitle}>Payment Method</Text>
       </View>
-      {paymentMethods.map((paymentMethod) => (
+      {paymentMethodsWithIcons.map((paymentMethod) => (
         <TouchableOpacity
           key={paymentMethod.id}
           style={[
             styles.methodOption,
-            method === paymentMethod.id && styles.selectedMethod,
+            method === paymentMethod.name && styles.selectedMethod,
           ]}
-          onPress={() => setMethod(paymentMethod.id)}
+          onPress={() => setMethod(paymentMethod.name)}
         >
-          <paymentMethod.icon size={20} color={method === paymentMethod.id ? '#4CAF50' : '#666'} />
+          <paymentMethod.icon size={20} color={method === paymentMethod.name ? '#4CAF50' : '#666'} />
           <Text style={styles.methodName}>{paymentMethod.name}</Text>
         </TouchableOpacity>
       ))}
-      {method === 'credit_card' && (
+      {method === 'Credit Card' && (
         <>
           <TextInput
             style={[styles.input, errors.number && styles.inputError]}
@@ -211,19 +241,19 @@ const PaymentStep = ({ onSave, onCancel, selectedMethod }) => {
   );
 };
 
-const PromoCodeStep = ({ onSave, onCancel, currentPromo }) => {
+const PromoCodeStep = ({ onSave, onCancel, initialData }) => {
   
   const promoCodes = useSelector(state => state.promotion.promotions);
   
-  const [promoCode, setPromoCode] = useState(currentPromo || '');
-  const [discount, setDiscount] = useState(0);
+  const [promoCode, setPromoCode] = useState(initialData?.promoCode || '');
+  const [discount, setDiscount] = useState(initialData?.discount || 0);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    dipatch(fetchPromotions());
+    dispatch(fetchPromotions());
   }, []);
 
-  const dipatch = useDispatch();
+  const dispatch = useDispatch();
 
     const validatePromoCode = (code) => {
       console.log("Promo Codes: ", promoCodes);
@@ -279,7 +309,7 @@ const PromoCodeStep = ({ onSave, onCancel, currentPromo }) => {
   );
 };
 
-export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
+export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) => {
   const [currentStep, setCurrentStep] = useState(null);
   const [checkoutData, setCheckoutData] = useState({
     delivery: null,
@@ -287,12 +317,22 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
     promoCode: null,
   });
   const [totalCost, setTotalCost] = useState(initialTotalCost);
+  const deliveryMethods = useSelector(state => state.delivery.deliveryMethods);
+  const paymentMethods = useSelector(state => state.payment.paymentMethods);
+  const promotions = useSelector(state => state.promotion.promotions);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchDeliveryMethods());
+    dispatch(fetchPaymentMethods());
+    dispatch(fetchPromotions());
+  }, []);
 
   const updateTotalCost = () => {
     let newTotal = initialTotalCost;
     if (checkoutData.delivery) {
-      const deliveryMethod = deliveryMethods.find(m => m.id === checkoutData.delivery.method);
-      newTotal += deliveryMethod ? deliveryMethod.price : 0;
+      newTotal += getDeliveryFee(checkoutData.delivery.method);
     }
     if (checkoutData.promoCode && checkoutData.promoCode.discount) {
       newTotal *= (1 - checkoutData.promoCode.discount / 100);
@@ -304,39 +344,67 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
     updateTotalCost();
   }, [checkoutData, initialTotalCost]);
 
+  // Calculate delivery date
+  const calculateDeliveryDate = (method) => {
+    const deliveryMethod = deliveryMethods.find(m => m.id === method);
+    
+    if (deliveryMethod.name === 'Standard Delivery') {
+      return new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000);
+    } else if (deliveryMethod.name === 'Express Delivery') {
+      return new Date(new Date().getTime() + 1 * 24 * 60 * 60 * 1000);
+    }
+  };
+
+  // Get delivery fee
+  const getDeliveryFee = (method) => {
+    const deliveryMethod = deliveryMethods.find(m => m.id === method);
+    return deliveryMethod ? deliveryMethod.fee : 0;
+  };
+
+  // Get payment method
+  const getPaymentMethod = (method) => {
+    const paymentMethod = paymentMethods.find(m => m.name === method);
+    return paymentMethod ? paymentMethod.id : 0;
+  };
+
+  // Get promotion
+  const getPromotion = (promoCode) => {
+    const promotion = promotions.find(p => p.code === promoCode);
+    return promotion ? promotion.id : 0;
+  };
+
+  const handleStepSave = (step, data) => {
+    setCheckoutData( prevDate => ({
+      ...prevDate,
+      [step]: data,
+    }));
+    setCurrentStep(null);
+  }
+
   const renderStep = () => {
     switch (currentStep) {
       case 'delivery':
         return (
           <DeliveryStep
-            onSave={(data) => {
-              setCheckoutData({ ...checkoutData, delivery: data });
-              setCurrentStep(null);
-            }}
-            selectedMethod={checkoutData.delivery?.method}
+            onSave={(data) => { handleStepSave('delivery', data) }}
             onCancel={() => setCurrentStep(null)}
+            initialData={checkoutData.delivery}
           />
         );
       case 'payment':
         return (
           <PaymentStep
-            onSave={(data) => {
-              setCheckoutData({ ...checkoutData, payment: data });
-              setCurrentStep(null);
-            }}
-            selectedMethod={checkoutData.payment?.method}
+            onSave={(data) => { handleStepSave('payment', data) }}
             onCancel={() => setCurrentStep(null)}
+            initialData={checkoutData.payment}
           />
         );
       case 'promo':
         return (
           <PromoCodeStep
-            onSave={(data) => {
-              setCheckoutData({ ...checkoutData, promoCode: data });
-              setCurrentStep(null);
-            }}
-            currentPromo={checkoutData.promoCode?.promoCode}
+            onSave={(data) => { handleStepSave('promoCode', data) }}
             onCancel={() => setCurrentStep(null)}
+            initialData={checkoutData.promoCode}
           />
         );
       default:
@@ -398,8 +466,34 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost }) => {
               disabled={!checkoutData.delivery || !checkoutData.payment}
               onPress={() => {
                 // Handle order placement
-                console.log('Order placed:', checkoutData);
+                console.log('Order placed:', checkoutData.promoCode);
+                
+                const orderDetails = items.map(item => new OrderDetailModel(0, item.product.id, item.quantity, item.price));
+
+                const creditCard = new CreditCardModel(0, checkoutData.payment.cardDetails .number, checkoutData.payment.cardDetails.expiry, checkoutData.payment.cardDetails.cvv);
+                
+                // Mock user id
+                const user = 4;
+
+                const order = new OrderModel(
+                  new Date(),
+                  getFullAddress(checkoutData.delivery.address.city, checkoutData.delivery.address.street, checkoutData.delivery.address.state, checkoutData.delivery.address.zipCode),
+                  calculateDeliveryDate(checkoutData.delivery.method),
+                  getDeliveryFee(checkoutData.delivery.method),
+                  "Pending",
+                  orderDetails,
+                  getPaymentMethod(checkoutData.payment.method),
+                  creditCard,
+                  checkoutData.delivery.method,
+                  getPromotion(checkoutData.promoCode?.promoCode),
+                  user
+                );
+
+                dispatch(createOrder(order));
+                console.log('Order:', order);
+
                 Alert.alert('Order Placed', 'Your order has been successfully placed!');
+                dispatch(clearCart());
                 onClose();
               }}
             >
@@ -519,6 +613,8 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
+    backgroundColor: '#f5f5f5',
+    borderColor: '#ccc',
   },
   stepContainer: {
     padding: 20,
@@ -571,6 +667,9 @@ const styles = StyleSheet.create({
   selectedMethod: {
     borderColor: '#4CAF50',
     backgroundColor: '#E8F5E9',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
   methodName: {
     marginLeft: 10,

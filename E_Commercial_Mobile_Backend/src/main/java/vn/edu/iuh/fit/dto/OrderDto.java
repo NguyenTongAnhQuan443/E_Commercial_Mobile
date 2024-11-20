@@ -23,6 +23,7 @@ public class OrderDto implements Serializable {
     String status;
     List<OrderDetailDto> orderDetails;
     PaymentMethodDto paymentMethod;
+    CreditCardDetailDto creditCardDetail;
     DeliveryMethodDto deliveryMethod;
     PromotionDto promotion;
     UserDto user;

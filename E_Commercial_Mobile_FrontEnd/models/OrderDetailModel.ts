@@ -1,12 +1,14 @@
 class OrderDetailModel {
-    orderDetailID: number;
+    orderId: number;
+    productId: number;
     quantity: number;
     salePrice: number;
   
-    constructor(orderDetailID: number, quantity: number, salePrice: number) {
-      this.orderDetailID = orderDetailID;
-      this.quantity = quantity;
-      this.salePrice = salePrice;
+    constructor(orderId?: number, productId?: number, quantity?: number, salePrice?: number) {
+      this.orderId = orderId || 0;
+      this.productId = productId || 0;
+      this.quantity = quantity || 0;
+      this.salePrice = salePrice || 0;
     }
   }
   

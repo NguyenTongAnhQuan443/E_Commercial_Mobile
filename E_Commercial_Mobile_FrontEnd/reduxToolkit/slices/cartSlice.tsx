@@ -54,7 +54,12 @@ const cartSlice = createSlice({
                 existingItem.quantity = parseInt(action.payload.text);
             }
             state.totalPrices = calculateTotalPrices(state);
-        }
+        },
+
+        clearCart: (state) => {
+            state.cartItems = [];
+            state.totalPrices = 0;
+        },
 
     },
 });
@@ -63,5 +68,5 @@ function calculateTotalPrices(state: { cartItems: CartItemlModel[]; }) {
     return state.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 }
 
-export const { addToCart, removeFromCart, changeQuantity, decreaseQuantity, increaseQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, changeQuantity, decreaseQuantity, increaseQuantity, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
