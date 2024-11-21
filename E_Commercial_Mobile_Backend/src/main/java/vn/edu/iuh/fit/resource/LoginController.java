@@ -48,6 +48,15 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         try {
             UserDto userDto = userService.login(loginDto);
+            if (userDto == null) {
+                // If user not found
+                LoginResponseDto response = new LoginResponseDto(
+                        "error",
+                        "Invalid email or password",
+                        null
+                );
+                return ResponseEntity.badRequest().body(response);
+            }
             LoginResponseDto response = new LoginResponseDto("success", "Login successfully", userDto);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
