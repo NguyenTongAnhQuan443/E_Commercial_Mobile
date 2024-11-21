@@ -19,10 +19,10 @@ import vn.edu.iuh.fit.entity.Order;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
-
-    OrderDto toDto(Order order);
-
-    Order toEntity(OrderDto orderDto);
+//    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+//
+//    OrderDto toDto(Order order);
+//
+//    Order toEntity(OrderDto orderDto);
 
 }

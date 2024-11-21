@@ -44,7 +44,6 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
             <version>1.6.2</version> <!-- Hoặc phiên bản mới hơn -->
-            <scope>provided</scope>
         </dependency>
         <!-- Google API -->
         <dependency>

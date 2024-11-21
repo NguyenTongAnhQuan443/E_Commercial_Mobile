@@ -17,9 +17,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.List;
+
 
 @Entity
 @Table(name = "product")
@@ -58,4 +58,19 @@ public class Product {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", weight='" + weight + '\'' +
+                ", quantity=" + quantity +
+                ", avgRating=" + avgRating +
+                ", category=" + category +
+                ", images=" + images +
+                ", reviews=" + reviews +
+                '}';
+    }
 }

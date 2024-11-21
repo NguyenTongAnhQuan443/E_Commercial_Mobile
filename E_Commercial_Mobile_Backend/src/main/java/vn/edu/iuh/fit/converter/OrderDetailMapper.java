@@ -20,15 +20,15 @@ import vn.edu.iuh.fit.entity.OrderDetail;
 
 @Mapper(componentModel = "spring")
 public interface OrderDetailMapper {
-    OrderDetailMapper INSTANCE = Mappers.getMapper(OrderDetailMapper.class);
-
-//    @Mapping(source = "order.id", target = "orderId")
-//    @Mapping(source = "product.id", target = "productId")
-    OrderDetailDto toDto(OrderDetail orderDetail);
-
-//    @Mapping(source = "orderId", target = "order.id")
-//    @Mapping(source = "productId", target = "product.id")
-//    @Mapping(source = "orderId", target = "id.orderId")
-//    @Mapping(source = "productId", target = "id.productId")
-    OrderDetail toEntity(OrderDetailDto orderDetailDto);
+//    OrderDetailMapper INSTANCE = Mappers.getMapper(OrderDetailMapper.class);
+//
+////    @Mapping(source = "order.id", target = "orderId")
+////    @Mapping(source = "product.id", target = "productId")
+//    OrderDetailDto toDto(OrderDetail orderDetail);
+//
+////    @Mapping(source = "orderId", target = "order.id")
+////    @Mapping(source = "productId", target = "product.id")
+////    @Mapping(source = "orderId", target = "id.orderId")
+////    @Mapping(source = "productId", target = "id.productId")
+//    OrderDetail toEntity(OrderDetailDto orderDetailDto);
 }

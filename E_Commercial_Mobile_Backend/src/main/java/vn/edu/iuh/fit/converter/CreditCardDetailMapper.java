@@ -19,10 +19,10 @@ import vn.edu.iuh.fit.entity.CreditCardDetail;
 
 @Mapper(componentModel = "spring")
 public interface CreditCardDetailMapper {
-    CreditCardDetailMapper INSTANCE = Mappers.getMapper(CreditCardDetailMapper.class);
-
-    CreditCardDetailDto toDto(CreditCardDetail creditCardDetail);
-
-    CreditCardDetail toEntity(CreditCardDetailDto creditCardDetailDto);
+//    CreditCardDetailMapper INSTANCE = Mappers.getMapper(CreditCardDetailMapper.class);
+//
+//    CreditCardDetailDto toDto(CreditCardDetail creditCardDetail);
+//
+//    CreditCardDetail toEntity(CreditCardDetailDto creditCardDetailDto);
 
 }
