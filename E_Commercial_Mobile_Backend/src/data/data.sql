@@ -235,10 +235,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- Dumping data for table ecommerce.user: ~3 rows (approximately)
 DELETE FROM `user`;
-INSERT INTO `user` (`id`, `activation_code`, `address`, `avatar`, `email`, `enabled`, `full_name`, `gender`, `password`, `phone`, `username`) VALUES
-	(1, NULL, '123 Pet Street', NULL, 'john.doe@example.com', b'1', 'John Doe', 'Male', 'hashed_password1', '123456789', 'johndoe'),
-	(2, NULL, '456 Cat Alley', NULL, 'jane.smith@example.com', b'1', 'Jane Smith', 'Female', 'hashed_password2', '987654321', 'janesmith'),
-	(3, NULL, '789 Dog Avenue', NULL, 'petlover@example.com', b'1', 'Pet Lover', 'Other', 'hashed_password3', '112233445', 'petlover');
+INSERT INTO `user` (`id`, `activation_code`, `address`, `avatar`, `email`, `enabled`, `full_name`, `gender`, `password`, `phone`) VALUES
+	(1, NULL, '123 Pet Street', NULL, 'john.doe@example.com', b'1', 'John Doe', 'Male', 'hashed_password1', '123456789'),
+	(2, NULL, '456 Cat Alley', NULL, 'jane.smith@example.com', b'1', 'Jane Smith', 'Female', 'hashed_password2', '987654321'),
+	(3, NULL, '789 Dog Avenue', NULL, 'petlover@example.com', b'1', 'Pet Lover', 'Other', 'hashed_password3', '112233445');
 
 -- Dumping structure for table ecommerce.wish_list
 CREATE TABLE IF NOT EXISTS `wish_list` (
