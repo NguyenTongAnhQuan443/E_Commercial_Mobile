@@ -35,7 +35,6 @@ public class ProductRESTController {
     @GetMapping
     public ResponseEntity<List<ProductDto>> getAllProduct() {
         try {
-            System.out.println("Get all product: "+ productService.getAllProduct());
             return ResponseEntity.ok(productService.getAllProduct());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);

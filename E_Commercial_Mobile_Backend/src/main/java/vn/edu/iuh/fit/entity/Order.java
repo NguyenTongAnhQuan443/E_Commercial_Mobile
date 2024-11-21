@@ -47,7 +47,6 @@ public class Order {
     private List<OrderDetail> orderDetails;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH,
             CascadeType.REFRESH
@@ -61,11 +60,10 @@ public class Order {
             CascadeType.DETACH,
             CascadeType.REFRESH
     })
-    @JoinColumn(name = "credit_card_detail_id")
-    private CreditCardDetail creditCardDetail;
+    @JoinColumn(name = "credit_card_id")
+    private CreditCard creditCard;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH,
             CascadeType.REFRESH
@@ -74,7 +72,6 @@ public class Order {
     private DeliveryMethod deliveryMethod;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH,
             CascadeType.REFRESH
@@ -83,11 +80,28 @@ public class Order {
     private Promotion promotion;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE,
             CascadeType.DETACH,
             CascadeType.REFRESH
     })
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", createdDate=" + createdDate +
+                ", shippingAddress='" + shippingAddress + '\'' +
+                ", shippingDate=" + shippingDate +
+                ", shippingFee=" + shippingFee +
+                ", status='" + status + '\'' +
+                ", orderDetails=" + orderDetails +
+                ", paymentMethod=" + paymentMethod +
+                ", creditCardDetail=" + creditCard +
+                ", deliveryMethod=" + deliveryMethod +
+                ", promotion=" + promotion +
+                ", user=" + user +
+                '}';
+    }
 }

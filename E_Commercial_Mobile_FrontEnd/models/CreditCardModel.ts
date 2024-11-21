@@ -1,13 +1,13 @@
 class CreditCardModel {
     id: number;
     cardNumber: string;
-    expirationDate: string;
+    expiryDate: string;
     cvv: string;
 
-    constructor(id?: number, cardNumber?: string, expirationDate?: string, cvv?: string) {
-        this.id = id || 0;
+    constructor(id?: number, cardNumber?: string, expiryDate?: string, cvv?: string) {
+        this.id = id ?? null;
         this.cardNumber = cardNumber || ''; 
-        this.expirationDate = expirationDate || '';
+        this.expiryDate = expiryDate || '';
         this.cvv = cvv || '';
     }
 }

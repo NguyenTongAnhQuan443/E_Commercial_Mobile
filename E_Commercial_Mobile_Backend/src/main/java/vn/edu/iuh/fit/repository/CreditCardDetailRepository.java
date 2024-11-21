@@ -8,7 +8,7 @@ package vn.edu.iuh.fit.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import vn.edu.iuh.fit.entity.CreditCardDetail;
+import vn.edu.iuh.fit.entity.CreditCard;
 
 /*
  * @description:
@@ -18,5 +18,5 @@ import vn.edu.iuh.fit.entity.CreditCardDetail;
  */
 
 @Repository
-public interface CreditCardDetailRepository extends JpaRepository<CreditCardDetail, Long> {
+public interface CreditCardDetailRepository extends JpaRepository<CreditCard, Long> {
 }

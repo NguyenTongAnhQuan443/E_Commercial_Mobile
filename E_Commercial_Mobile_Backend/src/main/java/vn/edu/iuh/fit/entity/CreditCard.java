@@ -17,12 +17,12 @@ import lombok.*;
  */
 
 @Entity
-@Table(name = "credit_card_detail")
+@Table(name = "credit_card")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreditCardDetail {
+public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

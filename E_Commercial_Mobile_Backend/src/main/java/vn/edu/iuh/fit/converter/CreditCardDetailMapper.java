@@ -14,15 +14,17 @@ package vn.edu.iuh.fit.converter;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import vn.edu.iuh.fit.dto.CreditCardDetailDto;
-import vn.edu.iuh.fit.entity.CreditCardDetail;
+import vn.edu.iuh.fit.dto.CreditCardDto;
+import vn.edu.iuh.fit.entity.CreditCard;
 
 @Mapper(componentModel = "spring")
 public interface CreditCardDetailMapper {
-//    CreditCardDetailMapper INSTANCE = Mappers.getMapper(CreditCardDetailMapper.class);
-//
-//    CreditCardDetailDto toDto(CreditCardDetail creditCardDetail);
-//
-//    CreditCardDetail toEntity(CreditCardDetailDto creditCardDetailDto);
+    CreditCardDetailMapper INSTANCE = Mappers.getMapper(CreditCardDetailMapper.class);
+
+//    @Mapping(target = "cvv", source = "securityCode")
+    CreditCardDto toDto(CreditCard creditCard);
+
+//    @Mapping(target = "securityCode", source = "cvv")
+    CreditCard toEntity(CreditCardDto creditCardDto);
 
 }

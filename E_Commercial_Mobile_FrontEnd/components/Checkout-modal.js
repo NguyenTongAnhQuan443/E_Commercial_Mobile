@@ -11,6 +11,7 @@ import OrderModel from '../models/OrderModel';
 import { createOrder } from '../reduxToolkit/slices/orderSlice';
 import CreditCardModel from '../models/CreditCardModel';
 import { clearCart } from '../reduxToolkit/slices/cartSlice';
+import UserModel from '../models/UserModel';
 
 
 // Mock data for delivery and payment methods
@@ -358,19 +359,24 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
   // Get delivery fee
   const getDeliveryFee = (method) => {
     const deliveryMethod = deliveryMethods.find(m => m.id === method);
-    return deliveryMethod ? deliveryMethod.fee : 0;
+    return deliveryMethod? deliveryMethod.fee : 0;
+  };
+
+  const getDelivery = (method) => {
+    const deliveryMethod = deliveryMethods.find(m => m.id === method);
+    return deliveryMethod;
   };
 
   // Get payment method
   const getPaymentMethod = (method) => {
     const paymentMethod = paymentMethods.find(m => m.name === method);
-    return paymentMethod ? paymentMethod.id : 0;
+    return paymentMethod;
   };
 
   // Get promotion
   const getPromotion = (promoCode) => {
     const promotion = promotions.find(p => p.code === promoCode);
-    return promotion ? promotion.id : 0;
+    return promotion;
   };
 
   const handleStepSave = (step, data) => {
@@ -468,12 +474,12 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
                 // Handle order placement
                 console.log('Order placed:', checkoutData.promoCode);
                 
-                const orderDetails = items.map(item => new OrderDetailModel(0, item.product.id, item.quantity, item.price));
+                const orderDetails = items.map(item => new OrderDetailModel(null, item.product.id, item.quantity, item.price));
 
-                const creditCard = new CreditCardModel(0, checkoutData.payment.cardDetails .number, checkoutData.payment.cardDetails.expiry, checkoutData.payment.cardDetails.cvv);
+                const creditCard = new CreditCardModel(null, checkoutData.payment.cardDetails .number, checkoutData.payment.cardDetails.expiry, checkoutData.payment.cardDetails.cvv);
                 
                 // Mock user id
-                const user = 4;
+                const user = new UserModel(5, 'Nguyễn Thanh Nhứt', 'thanhnhutcu@gmail.com');
 
                 const order = new OrderModel(
                   new Date(),
@@ -484,7 +490,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
                   orderDetails,
                   getPaymentMethod(checkoutData.payment.method),
                   creditCard,
-                  checkoutData.delivery.method,
+                  getDelivery(checkoutData.delivery.method),
                   getPromotion(checkoutData.promoCode?.promoCode),
                   user
                 );

@@ -13,16 +13,18 @@ package vn.edu.iuh.fit.converter;
  */
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import vn.edu.iuh.fit.dto.OrderDto;
 import vn.edu.iuh.fit.entity.Order;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-//    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
-//
-//    OrderDto toDto(Order order);
-//
-//    Order toEntity(OrderDto orderDto);
+    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+
+    OrderDto toDto(Order order);
+
+    @Mapping(target = "orderDetails", ignore = true)
+    Order toEntity(OrderDto orderDto);
 
 }

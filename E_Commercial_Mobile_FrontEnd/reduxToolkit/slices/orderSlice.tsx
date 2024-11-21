@@ -4,7 +4,7 @@ import OrderModel from "../../models/OrderModel";
 
 const createOrder = createAsyncThunk("orders/createOrder", async (order: OrderModel) => {
     try {
-        const response = await axios.post("http://localhost:8080/api/order", order);
+        const response = await axios.post("http://localhost:8080/api/orders", order);
         return response.data;
     } catch (error) {
         throw error;
@@ -13,7 +13,7 @@ const createOrder = createAsyncThunk("orders/createOrder", async (order: OrderMo
 
 // const fetchOrders = createAsyncThunk("orders/fetchOrders", async () => {
 //     try {
-//         const response = await axios.get("http://localhost:8080/api/order");
+//         const response = await axios.get("http://localhost:8080/api/orders");
 //         return response.data;
 //     } catch (error) {
 //         throw error;
