@@ -89,6 +89,14 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public List<ProductDto> getProductsByName(String name) {
+        return productRepository.searchByName(name)
+                .stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
+
     private List<ProductDto> getProductsDto(List<ExternalProductDto> externalProductDtos) {
         return externalProductDtos.stream().map(externalProductDto -> {
             Product product = productRepository.findById(externalProductDto.getId()).orElse(new Product());

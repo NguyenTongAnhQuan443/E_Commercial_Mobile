@@ -13,10 +13,7 @@ package vn.edu.iuh.fit.resource;
  */
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.dto.ProductDto;
 import vn.edu.iuh.fit.service.ProductService;
@@ -88,4 +85,9 @@ public class ProductRESTController {
         }
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam String name) {
+        List<ProductDto> products = productService.getProductsByName(name);
+        return ResponseEntity.ok(products);
+    }
 }

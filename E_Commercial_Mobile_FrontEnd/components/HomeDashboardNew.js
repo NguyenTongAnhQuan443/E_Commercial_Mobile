@@ -28,13 +28,6 @@ const HomeDashboardNew = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          // if(route.name == 'Home'){
-          //     iconName = focused ? 'home' : 'home-outline';
-          // }else if(route.name == 'Home1'){
-          //     iconName = focused ? 'person-add' : 'person-add-alt-1';
-
-          //     return <MaterialIcons name = {iconName} size={size} color={color}/>
-          // }
           if (route.name === 'Home') {
             iconName = 'home';
           } else if (route.name === 'Signup') {
