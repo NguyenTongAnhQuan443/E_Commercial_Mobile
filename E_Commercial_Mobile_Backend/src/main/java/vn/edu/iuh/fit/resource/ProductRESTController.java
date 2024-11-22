@@ -37,6 +37,7 @@ public class ProductRESTController {
         try {
             return ResponseEntity.ok(productService.getAllProduct());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
     }

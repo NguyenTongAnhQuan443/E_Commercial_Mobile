@@ -20,6 +20,9 @@ import vn.edu.iuh.fit.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
+
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+
     @Mapping(source = "id", target = "id")
     @Mapping(source = "fullName", target = "fullName")
     @Mapping(source = "email", target = "email")
@@ -28,8 +31,6 @@ public interface UserMapper {
     @Mapping(source = "address", target = "address")
     @Mapping(source = "enabled", target = "enabled")
     @Mapping(source = "avatar", target = "avatar")
-//    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
     UserDto toDto(User user);
 
     User toEntity(UserDto userDto);

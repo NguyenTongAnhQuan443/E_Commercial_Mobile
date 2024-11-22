@@ -259,6 +259,179 @@ CREATE TABLE IF NOT EXISTS `wish_list` (
 DELETE FROM `wish_list`;
 INSERT INTO `wish_list` (`id`, `added_date`, `is_purchase`, `name`, `product_id`, `user_id`) VALUES
 	(1, '2024-11-10', b'0', 'My Wishlist', 3, 3);
+	
+-- Add more data
+INSERT INTO `user` (`id`, `address`, `email`, `enabled`, `full_name`, `gender`, `password`, `phone`) VALUES
+(4, '101 Dog Lane', 'sarah.wilson@example.com', b'1', 'Sarah Wilson', 'Female', 'hashed_password4', '555000111'),
+(5, '202 Cat Street', 'mike.brown@example.com', b'1', 'Mike Brown', 'Male', 'hashed_password5', '555000222'),
+(6, '303 Pet Avenue', 'emily.davis@example.com', b'1', 'Emily Davis', 'Female', 'hashed_password6', '555000333'),
+(7, '404 Animal Road', 'david.taylor@example.com', b'1', 'David Taylor', 'Male', 'hashed_password7', '555000444'),
+(8, '505 Puppy Lane', 'lisa.martin@example.com', b'1', 'Lisa Martin', 'Female', 'hashed_password8', '555000555'),
+(9, '606 Kitten Street', 'james.anderson@example.com', b'1', 'James Anderson', 'Male', 'hashed_password9', '555000666'),
+(10, '707 Pet Park', 'emma.white@example.com', b'1', 'Emma White', 'Female', 'hashed_password10', '555000777'),
+(11, '808 Pet Circle', 'robert.clark@example.com', b'1', 'Robert Clark', 'Male', 'hashed_password11', '555000888'),
+(12, '909 Dog Circle', 'sophia.lee@example.com', b'1', 'Sophia Lee', 'Female', 'hashed_password12', '555000999'),
+(13, '110 Cat Way', 'oliver.hall@example.com', b'1', 'Oliver Hall', 'Male', 'hashed_password13', '555001000'),
+(14, '111 Animal Circle', 'ava.young@example.com', b'1', 'Ava Young', 'Female', 'hashed_password14', '555001111'),
+(15, '112 Pet Plaza', 'william.king@example.com', b'1', 'William King', 'Male', 'hashed_password15', '555001222'),
+(16, '113 Dog Square', 'mia.wright@example.com', b'1', 'Mia Wright', 'Female', 'hashed_password16', '555001333'),
+(17, '114 Cat Corner', 'alexander.lopez@example.com', b'1', 'Alexander Lopez', 'Male', 'hashed_password17', '555001444'),
+(18, '115 Pet Haven', 'charlotte.hill@example.com', b'1', 'Charlotte Hill', 'Female', 'hashed_password18', '555001555'),
+(19, '116 Animal Haven', 'daniel.scott@example.com', b'1', 'Daniel Scott', 'Male', 'hashed_password19', '555001666'),
+(20, '117 Pet Paradise', 'sofia.green@example.com', b'1', 'Sofia Green', 'Female', 'hashed_password20', '555001777');
+
+-- Add more products
+INSERT INTO `product` (`id`, `avg_rating`, `description`, `name`, `price`, `quantity`, `weight`, `category_id`) VALUES
+(9, 4.6, 'Thức ăn khô cao cấp cho chó già', 'Senior Dog Premium Dry Food', 160000, 45, '4kg', 1),
+(10, 4.3, 'Thức ăn khô cho chó con', 'Puppy Growth Formula Dry Food', 170000, 55, '3kg', 1),
+(11, 4.7, 'Thức ăn ướt hỗn hợp thịt bò cho chó', 'Beef Feast Wet Dog Food', 125000, 40, '2kg', 2),
+(12, 4.4, 'Thức ăn ướt vị cá ngừ cho chó', 'Tuna Delight Wet Dog Food', 115000, 35, '2kg', 2),
+(13, 4.8, 'Thức ăn khô cho mèo già', 'Senior Cat Dry Food', 145000, 50, '3kg', 3),
+(14, 4.5, 'Thức ăn khô cho mèo con', 'Kitten Growth Formula', 155000, 60, '2kg', 3),
+(15, 4.6, 'Thức ăn ướt vị cá thu cho mèo', 'Mackerel Feast Cat Food', 135000, 45, '1.5kg', 4),
+(16, 4.7, 'Thức ăn ướt vị thịt gà cho mèo', 'Chicken Delight Cat Food', 140000, 40, '1.5kg', 4),
+(17, 4.5, 'Thức ăn khô cho chó nhỏ giống', 'Small Breed Adult Dog Food', 180000, 40, '2.5kg', 1),
+(18, 4.6, 'Thức ăn khô cho chó có vấn đề về da', 'Skin Care Dog Food', 190000, 35, '3kg', 1),
+(19, 4.7, 'Thức ăn khô cho chó giảm cân', 'Weight Control Dog Food', 175000, 45, '3kg', 1),
+(20, 4.4, 'Thức ăn ướt vị gà và rau củ cho chó', 'Chicken & Vegetables Wet Dog Food', 130000, 50, '2kg', 2),
+(21, 4.8, 'Thức ăn ướt vị cá hồi cho chó', 'Salmon Delight Wet Dog Food', 140000, 40, '2kg', 2),
+(22, 4.6, 'Thức ăn khô cho mèo sterilised', 'Sterilised Cat Dry Food', 165000, 55, '3kg', 3),
+(23, 4.7, 'Thức ăn khô cho mèo hairball control', 'Hairball Control Cat Food', 170000, 45, '3kg', 3),
+(24, 4.5, 'Thức ăn ướt vị cá ngừ và tôm cho mèo', 'Tuna & Shrimp Cat Food', 145000, 50, '1.5kg', 4);
+
+
+-- Add product images
+INSERT INTO `image` (`image_uri`, `name`, `product_id`) VALUES
+('https://m.media-amazon.com/images/I/71pU2e3cx8L._AC_UF1000,1000_QL80_.jpg', 'Senior Dog Food Image', 9),
+('https://m.media-amazon.com/images/I/81o1iYyjrVL._AC_UF1000,1000_QL80_.jpg', 'Puppy Food Image', 10),
+('https://m.media-amazon.com/images/I/81PuApdK0SL.jpg', 'Beef Dog Food Image', 11),
+('https://m.media-amazon.com/images/I/51w813JdB8L._AC_UF1000,1000_QL80_.jpg', 'Tuna Dog Food Image', 12),
+('https://m.media-amazon.com/images/I/81UrFlG-PxL._AC_UF1000,1000_QL80_.jpg', 'Senior Cat Food Image', 13),
+('https://m.media-amazon.com/images/I/81eES5QW0mL.jpg', 'Kitten Food Image', 14),
+('https://m.media-amazon.com/images/I/91XQ-6O-mRS.jpg', 'Mackerel Cat Food Image', 15),
+('https://m.media-amazon.com/images/I/81538w5RpCL._AC_UF1000,1000_QL80_.jpg', 'Chicken Cat Food Image', 16),
+('https://m.media-amazon.com/images/I/81535-Zp7xL._AC_UF894,1000_QL80_.jpg', 'Small Breed Dog Food Image', 17),
+('https://m.media-amazon.com/images/I/71azz3BRCpL._AC_UF1000,1000_QL80_.jpg', 'Skin Care Dog Food Image', 18),
+('https://m.media-amazon.com/images/I/71PjBC2aV5L._AC_UF1000,1000_QL80_.jpg', 'Weight Control Dog Food Image', 19),
+('https://m.media-amazon.com/images/I/81xNytQXo6S._AC_SX679_.jpg', 'Chicken & Vegetables Dog Food Image', 20),
+('https://m.media-amazon.com/images/I/81AGiRGQaPL.jpg', 'Salmon Dog Food Image', 21),
+('https://m.media-amazon.com/images/I/51Fwd7L55QL._AC_UF894,1000_QL80_.jpg', 'Sterilised Cat Food Image', 22),
+('https://m.media-amazon.com/images/I/81i0Gi+B4ZL._AC_UF1000,1000_QL80_.jpg', 'Hairball Control Cat Food Image', 23),
+('https://m.media-amazon.com/images/I/81AbDiKEABL._AC_UF1000,1000_QL80_.jpg', 'Tuna & Shrimp Cat Food Image', 24);
+
+-- Add more reviews (với nhiều ratings khác nhau để tạo diversity)
+INSERT INTO `review` (`comment`, `rating`, `review_date`, `product_id`, `user_id`) VALUES
+('Thức ăn rất tốt cho chó già của tôi', 4.5, '2024-10-15', 9, 4),
+('Chó con nhà tôi rất thích loại này', 5.0, '2024-10-16', 10, 5),
+('Khá ngon nhưng hơi đắt', 3.5, '2024-10-17', 11, 6),
+('Chất lượng tuyệt vời', 4.8, '2024-10-18', 12, 7),
+('Mèo già nhà tôi rất thích', 4.7, '2024-10-19', 13, 8),
+('Mèo con ăn rất khỏe', 4.9, '2024-10-20', 14, 9),
+('Giá cả hợp lý, chất lượng tốt', 4.6, '2024-10-21', 15, 10),
+('Mèo nhà tôi không thích lắm', 3.0, '2024-10-22', 16, 4),
+('Rất tốt cho sức khỏe thú cưng', 4.8, '2024-10-23', 9, 5),
+('Đáng đồng tiền bát gạo', 4.7, '2024-10-24', 10, 6),
+('Sẽ mua lại lần nữa', 4.5, '2024-10-25', 11, 7),
+('Chất lượng không ổn định', 3.2, '2024-10-26', 12, 8),
+('Rất hài lòng với sản phẩm', 4.9, '2024-10-27', 13, 9),
+('Giá hơi cao nhưng xứng đáng', 4.4, '2024-10-28', 14, 10),
+('Thú cưng rất thích', 4.6, '2024-10-29', 15, 4),
+('Chó nhỏ của tôi rất thích loại này', 4.8, '2024-10-30', 17, 11),
+('Cải thiện rõ rệt tình trạng da của chó', 4.7, '2024-10-31', 18, 12),
+('Hiệu quả trong việc kiểm soát cân nặng', 4.5, '2024-11-01', 19, 13),
+('Chó rất thích vị gà và rau củ', 4.6, '2024-11-02', 20, 14),
+('Phù hợp với chó kén ăn', 4.3, '2024-11-03', 21, 15),
+('Tốt cho mèo đã triệt sản', 4.9, '2024-11-04', 22, 16),
+('Giảm rõ rệt tình trạng búi lông', 4.7, '2024-11-05', 23, 17),
+('Mèo rất thích vị này', 4.8, '2024-11-06', 24, 18),
+('Chất lượng tuyệt vời nhưng hơi đắt', 4.2, '2024-11-07', 17, 19),
+('Đáng giá từng đồng', 4.6, '2024-11-08', 18, 20),
+('Không hiệu quả lắm với chó nhà tôi', 3.5, '2024-11-09', 19, 11),
+('Sản phẩm chất lượng cao', 4.8, '2024-11-10', 20, 12),
+('Mèo nhà tôi không thích lắm', 3.8, '2024-11-11', 21, 13),
+('Rất tốt cho sức khỏe mèo', 4.7, '2024-11-12', 22, 14),
+('Giá hơi cao nhưng hiệu quả', 4.5, '2024-11-13', 23, 15),
+('Thú cưng rất thích', 4.9, '2024-11-14', 24, 16),
+('Sẽ mua lại', 4.6, '2024-11-15', 17, 17),
+('Chất lượng ổn định', 4.7, '2024-11-16', 18, 18),
+('Đóng gói cẩn thận', 4.8, '2024-11-17', 19, 19),
+('Giao hàng nhanh, sản phẩm tốt', 4.5, '2024-11-18', 20, 20);
+
+-- Add more orders
+INSERT INTO `order` (`created_date`, `shipping_address`, `shipping_date`, `shipping_fee`, `status`, `delivery_method_id`, `payment_method_id`, `user_id`) VALUES
+('2024-10-15', '101 Dog Lane', '2024-10-17', 20000, 'Delivered', 2, 1, 4),
+('2024-10-16', '202 Cat Street', '2024-10-18', 50000, 'Delivered', 1, 2, 5),
+('2024-10-17', '303 Pet Avenue', '2024-10-19', 20000, 'Delivered', 2, 1, 6),
+('2024-10-18', '404 Animal Road', '2024-10-20', 50000, 'Delivered', 1, 2, 7),
+('2024-10-19', '505 Puppy Lane', '2024-10-21', 20000, 'Delivered', 2, 1, 8),
+('2024-10-20', '606 Kitten Street', '2024-10-22', 50000, 'Processing', 1, 2, 9),
+('2024-10-21', '707 Pet Park', '2024-10-23', 20000, 'Processing', 2, 1, 10),
+('2024-10-22', '808 Pet Circle', '2024-10-24', 50000, 'Delivered', 1, 1, 11),
+('2024-10-23', '909 Dog Circle', '2024-10-25', 20000, 'Delivered', 2, 2, 12),
+('2024-10-24', '110 Cat Way', '2024-10-26', 50000, 'Delivered', 1, 1, 13),
+('2024-10-25', '111 Animal Circle', '2024-10-27', 20000, 'Processing', 2, 2, 14),
+('2024-10-26', '112 Pet Plaza', '2024-10-28', 50000, 'Processing', 1, 1, 15),
+('2024-10-27', '113 Dog Square', '2024-10-29', 20000, 'Delivered', 2, 2, 16),
+('2024-10-28', '114 Cat Corner', '2024-10-30', 50000, 'Processing', 1, 1, 17),
+('2024-10-29', '115 Pet Haven', '2024-10-31', 20000, 'Delivered', 2, 2, 18),
+('2024-10-30', '116 Animal Haven', '2024-11-01', 50000, 'Processing', 1, 1, 19),
+('2024-10-31', '117 Pet Paradise', '2024-11-02', 20000, 'Delivered', 2, 2, 20);
+
+-- Add order details
+INSERT INTO `order_detail` (`quantity`, `sale_price`, `order_id`, `product_id`) VALUES
+(2, 160000, 1, 9),
+(1, 170000, 1, 10),
+(3, 125000, 2, 11),
+(2, 115000, 2, 12),
+(1, 145000, 3, 13),
+(2, 155000, 3, 14),
+(3, 135000, 4, 15),
+(1, 140000, 4, 16),
+(2, 160000, 5, 9),
+(1, 170000, 5, 10),
+(2, 125000, 6, 11),
+(3, 115000, 6, 12),
+(1, 145000, 7, 13),
+(2, 180000, 8, 17),
+(1, 190000, 8, 18),
+(3, 175000, 9, 19),
+(2, 130000, 9, 20),
+(1, 140000, 10, 21),
+(2, 165000, 10, 22),
+(3, 170000, 11, 23),
+(1, 145000, 11, 24),
+(2, 180000, 12, 17),
+(1, 190000, 12, 18),
+(2, 175000, 13, 19),
+(3, 130000, 13, 20),
+(1, 140000, 14, 21),
+(2, 165000, 14, 22),
+(3, 170000, 15, 23),
+(1, 145000, 15, 24),
+(2, 180000, 16, 17),
+(1, 190000, 16, 18),
+(2, 175000, 17, 19),
+(3, 130000, 17, 20);
+
+-- Add more wishlist items
+INSERT INTO `wish_list` (`added_date`, `is_purchase`, `name`, `product_id`, `user_id`) VALUES
+('2024-10-15', b'0', 'Pet Food Wishlist', 9, 4),
+('2024-10-16', b'0', 'Dog Food Collection', 10, 5),
+('2024-10-17', b'0', 'Cat Food Favorites', 13, 6),
+('2024-10-18', b'0', 'Future Purchases', 14, 7),
+('2024-10-19', b'0', 'Gift Ideas', 15, 8),
+('2024-10-20', b'0', 'Favorite Products', 16, 9),
+('2024-10-21', b'0', 'Shopping List', 11, 10),
+('2024-10-22', b'0', 'Favorite Dog Food', 17, 11),
+('2024-10-23', b'0', 'Must Buy List', 18, 12),
+('2024-10-24', b'0', 'Cat Products', 22, 13),
+('2024-10-25', b'0', 'Pet Food Collection', 23, 14),
+('2024-10-26', b'0', 'Monthly Supplies', 19, 15),
+('2024-10-27', b'0', 'Special Items', 20, 16),
+('2024-10-28', b'0', 'Premium Products', 21, 17),
+('2024-10-29', b'0', 'Regular Purchases', 24, 18),
+('2024-10-30', b'0', 'Shopping List', 17, 19),
+('2024-10-31', b'0', 'Favorites', 18, 20);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
