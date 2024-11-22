@@ -26,4 +26,6 @@ public interface ProductService {
     List<ProductDto> getBestSeller();
 
     List<ProductDto> getExclusiveOffer();
+
+    List<ProductDto> getRecommendations(Long id);
 }

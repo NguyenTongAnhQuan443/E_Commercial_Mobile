@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.dto.ProductDto;
 import vn.edu.iuh.fit.service.ProductService;
 
@@ -37,7 +38,6 @@ public class ProductRESTController {
         try {
             return ResponseEntity.ok(productService.getAllProduct());
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body(null);
         }
     }
@@ -73,6 +73,15 @@ public class ProductRESTController {
     public ResponseEntity<List<ProductDto>> getBestSeller() {
         try {
             return ResponseEntity.ok(productService.getBestSeller());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/recommendations/product/{id}")
+    public ResponseEntity<List<ProductDto>> getRecommendations(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(productService.getRecommendations(id));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

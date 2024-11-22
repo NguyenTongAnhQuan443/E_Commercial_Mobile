@@ -12,9 +12,14 @@ package vn.edu.iuh.fit.service.impl;
  * @version:    1.0
  */
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.converter.ProductMapper;
 import vn.edu.iuh.fit.dto.ProductDto;
+import vn.edu.iuh.fit.dto.api.ExternalProductDto;
+import vn.edu.iuh.fit.entity.Product;
 import vn.edu.iuh.fit.repository.ProductRepository;
 import vn.edu.iuh.fit.service.ProductService;
 
@@ -26,10 +31,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final RestTemplate restTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, RestTemplate restTemplate) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -58,5 +65,34 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDto> getExclusiveOffer() {
         return productRepository.findAll().stream().map(productMapper::toDto).toList();
+    }
+
+    @Override
+    public List<ProductDto> getRecommendations(Long id) {
+        try {
+            List<ExternalProductDto> externalProductDtos = restTemplate.exchange(
+                    "http://localhost:5000/api/recommendations/product/" + id,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<ExternalProductDto>>() {
+                    }
+            ).getBody();
+
+            if (externalProductDtos != null) {
+                return getProductsDto(externalProductDtos);
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    private List<ProductDto> getProductsDto(List<ExternalProductDto> externalProductDtos) {
+        return externalProductDtos.stream().map(externalProductDto -> {
+            Product product = productRepository.findById(externalProductDto.getId()).orElse(new Product());
+            return productMapper.toDto(product);
+        }).toList();
     }
 }
