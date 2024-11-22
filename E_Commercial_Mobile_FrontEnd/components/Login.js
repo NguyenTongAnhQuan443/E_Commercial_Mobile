@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Tách API
-const host = 'http://192.168.100.135:8080';
+// Kiểm tra xem đang chạy trên thiết bị thật hay giả lập
+const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
+
+const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080';  // Tùy vào thiết bị giả lập hay thật
 const endPoint = '/api/auth/login';
 
 const Login = ({ navigation }) => {

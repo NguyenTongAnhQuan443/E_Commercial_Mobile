@@ -12,7 +12,6 @@ import { convertToCurrency } from '../models/util';
 
 import Swiper from 'react-native-swiper';
 
-// Tách đường dẫn ảnh banner ra riêng
 const BANNER_IMAGES = [
     'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3a1fb4169601075.644fdce41162b.jpg',
     'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3ff3e4169601075.6450bfb338386.jpg',
@@ -45,7 +44,7 @@ const ManageTaskScreen = ({ navigation }) => {
         dispatch(getProductExclusiveOffer());
         dispatch(fetchCategories());
     }, []);
-
+    console.log(bestSeller);
     useEffect(() => {
         if (selectedCategory) {
             dispatch(getProductByCategoryId(selectedCategory.id));
@@ -123,12 +122,8 @@ const ManageTaskScreen = ({ navigation }) => {
                 </View>
                 {/* Other sections */}
                 <View style={styles.labelContainer}>
-                    <Text style={styles.labelText}>
-                        Exclusive Offer
-                    </Text>
-                    <Text style={styles.seeAllText}>
-                        See all
-                    </Text>
+                    <Text style={styles.labelText}>Khuyến mãi độc quyền</Text>
+                    <Text style={styles.seeAllText}>Tất cả</Text>
                 </View>
                 {/* Exclusive Offer */}
                 <ScrollView
@@ -143,12 +138,8 @@ const ManageTaskScreen = ({ navigation }) => {
                     }
                 </ScrollView>
                 <View style={styles.labelContainer}>
-                    <Text style={styles.labelText}>
-                        Best Selling
-                    </Text>
-                    <Text style={styles.seeAllText}>
-                        See all
-                    </Text>
+                    <Text style={styles.labelText}>Best Selling</Text>
+                    <Text style={styles.seeAllText}>Tất cả</Text>
                 </View>
                 {/* Best Seller */}
                 <ScrollView
@@ -163,12 +154,8 @@ const ManageTaskScreen = ({ navigation }) => {
                     }
                 </ScrollView>
                 <View style={styles.labelContainer}>
-                    <Text style={styles.labelText}>
-                        Groceries
-                    </Text>
-                    <Text style={styles.seeAllText}>
-                        See all
-                    </Text>
+                    <Text style={styles.labelText}>Groceries</Text>
+                    <Text style={styles.seeAllText}>Tất cả</Text>
                 </View>
                 <ScrollView
                     horizontal
