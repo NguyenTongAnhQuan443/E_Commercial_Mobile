@@ -10,8 +10,20 @@ import { fetchProducts, getProductById, getProductBestSeller, getProductByCatego
 import { fetchCategories } from '../reduxToolkit/slices/categorySlice';
 import { convertToCurrency } from '../models/util';
 
-const ManageTaskScreen = ({ navigation }) => {
+import Swiper from 'react-native-swiper';
 
+// Tách đường dẫn ảnh banner ra riêng
+const BANNER_IMAGES = [
+    'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3a1fb4169601075.644fdce41162b.jpg',
+    'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3ff3e4169601075.6450bfb338386.jpg',
+    'https://mir-s3-cdn-cf.behance.net/project_modules/1400/2027a2169601075.644fdce4171a6.jpg',
+    'https://mir-s3-cdn-cf.behance.net/project_modules/1400/5517dc169601075.6450bfb3377b9.jpg',
+    'https://mir-s3-cdn-cf.behance.net/project_modules/1400/2027a2169601075.644fdce4171a6.jpg',
+    'https://png.pngtree.com/png-clipart/20210418/original/pngtree-blue-halo-doodle-pet-adoption-template-png-image_6245369.png',
+    'https://png.pngtree.com/png-clipart/20210418/original/pngtree-dog-creative-doodle-pet-adoption-template-png-image_6245189.png',
+];
+
+const ManageTaskScreen = ({ navigation }) => {
     const items = useSelector(state => state.product.products);
     const categories = useSelector(state => state.category.categories);
     const bestSeller = useSelector(state => state.product.productBestSeller);
@@ -46,9 +58,9 @@ const ManageTaskScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const handleAddToCart = (item) => {
-        dispatch(addToCart({product: item, quantity: 1, price: item.price}));
+        dispatch(addToCart({ product: item, quantity: 1, price: item.price }));
         Alert.alert('Success', 'Item added to cart');
-    }
+    };
 
     const renderItem = (item, index) => {
         return (
@@ -75,21 +87,16 @@ const ManageTaskScreen = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-        )
-    }
+        );
+    };
 
     return (
-        <ScrollView style={styles.scrollViewContainer}
-            showsVerticalScrollIndicator={false}
-        >
+        <ScrollView style={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
             <SafeAreaView style={styles.container}>
                 <View style={styles.logoContainer}>
-                    <Image source={require('../assets/logo.png')} style={styles.logoImage} />
                     <View style={styles.locationContainer}>
-                        <Icon name='map-pin' size={20} color={'black'} />
-                        <Text style={styles.locationText}>
-                            HCM, Vietnam
-                        </Text>
+                        <Image source={require('../assets/images/cat.png')} style={styles.logoImage} />
+                        <Text style={styles.locationText}>FLEYPET</Text>
                     </View>
                 </View>
                 <View style={styles.searchContainer}>
@@ -99,9 +106,22 @@ const ManageTaskScreen = ({ navigation }) => {
                         style={styles.searchInput}
                     />
                 </View>
+                {/* Dynamic Banner */}
                 <View style={styles.bannerContainer}>
-                    <Image source={require('../assets/banner.png')} style={styles.bannerImage} />
+                    <Swiper
+                        autoplay
+                        autoplayTimeout={4}
+                        showsPagination={true}
+                        dotStyle={{ backgroundColor: 'lightgray', width: 8, height: 8 }}
+                        activeDotStyle={{ backgroundColor: '#53B175', width: 8, height: 8 }}
+                        containerStyle={styles.swiperContainer}
+                    >
+                        {BANNER_IMAGES.map((url, index) => (
+                            <Image key={index} source={{ uri: url }} style={styles.bannerImage} resizeMode='repeat' />
+                        ))}
+                    </Swiper>
                 </View>
+                {/* Other sections */}
                 <View style={styles.labelContainer}>
                     <Text style={styles.labelText}>
                         Exclusive Offer
@@ -180,7 +200,8 @@ const ManageTaskScreen = ({ navigation }) => {
             </SafeAreaView>
         </ScrollView>
     );
-}
+};
+
 
 const styles = StyleSheet.create({
     container: {
@@ -198,8 +219,8 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     logoImage: {
-        width: 30,
-        height: 30,
+        width: 64,
+        height: 64,
     },
     locationContainer: {
         flexDirection: 'row',
@@ -208,8 +229,9 @@ const styles = StyleSheet.create({
     },
     locationText: {
         marginLeft: 5,
-        fontSize: 18,
+        fontSize: 30,
         fontWeight: 'bold',
+        color: '#53B175'
     },
     // Search
     searchContainer: {
@@ -218,10 +240,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#f0f0f0',
         width: '90%',
-        paddingHorizontal: 10,
-        paddingVertical: 15,
+        paddingHorizontal: 20,
+        paddingVertical: 8,
         borderRadius: 15,
         marginTop: 20,
+        marginBottom: 10
     },
     searchInput: {
         width: '90%',
@@ -356,9 +379,16 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
 
-
-
-
+    // Banner new
+    swiperContainer: {
+        height: 150,
+    },
+    bannerImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 15,
+        resizeMode: 'contain',
+    },
 });
 
 export default ManageTaskScreen;
