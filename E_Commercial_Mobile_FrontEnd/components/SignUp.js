@@ -1,8 +1,50 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+// Tách API thành hằng số
+const host = 'http://192.168.100.135:8080';
+const registerEndpoint = '/api/auth/register';
+
 const SignUp = ({ navigation }) => {
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const handleSignUp = async () => {
+        if (password !== confirmPassword) {
+            Alert.alert('Lỗi', 'Mật khẩu nhập lại không khớp. Vui lòng kiểm tra lại!');
+            return;
+        }
+
+        try {
+            const response = await fetch(host + registerEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    fullName,
+                    email,
+                    password,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert('Thành công', 'Đăng ký thành công!');
+                navigation.navigate('Login'); // Chuyển về trang đăng nhập
+            } else {
+                Alert.alert('Lỗi', data.message || 'Đăng ký thất bại. Vui lòng thử lại!');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Lỗi', 'Có lỗi xảy ra. Vui lòng thử lại sau!');
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -12,11 +54,37 @@ const SignUp = ({ navigation }) => {
                 </View>
 
                 <View style={styles.form}>
-                    <TextInput style={styles.input} placeholder="Họ và tên" placeholderTextColor="#7f8c8d" />
-                    <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#7f8c8d" />
-                    <TextInput style={styles.input} placeholder="Mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
-                    <TextInput style={styles.input} placeholder="Nhập lại mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
-                    <TouchableOpacity style={styles.signUpButton}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Họ và tên"
+                        placeholderTextColor="#7f8c8d"
+                        value={fullName}
+                        onChangeText={setFullName}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Email"
+                        placeholderTextColor="#7f8c8d"
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Mật khẩu"
+                        placeholderTextColor="#7f8c8d"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Nhập lại mật khẩu"
+                        placeholderTextColor="#7f8c8d"
+                        secureTextEntry
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                    />
+                    <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
                         <Text style={styles.signUpButtonText}>Tạo tài khoản</Text>
                     </TouchableOpacity>
                     <View style={styles.signInContainer}>
