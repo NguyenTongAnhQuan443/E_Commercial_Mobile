@@ -53,8 +53,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto login(LoginDto loginDto) {
-        return userRepository.findUserByEmail(loginDto.getEmail())
-                .map(userMapper::toDto)
-                .orElse(null);
+        User user = userRepository.findUserByEmail(loginDto.getEmail()).orElse(null);
+
+        if (user != null && bCryptPasswordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+            return userMapper.toDto(user);
+        }
+
+        return null;
     }
 }
