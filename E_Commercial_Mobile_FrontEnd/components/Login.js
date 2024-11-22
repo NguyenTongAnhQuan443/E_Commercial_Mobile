@@ -1,46 +1,77 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Login = ({ navigation }) => {
+// Tách API
+const host = 'http://192.168.100.135:8080';
+const endPoint = '/api/auth/login';
 
+const Login = ({ navigation }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async () => {
+        try {
+            const url = host + endPoint;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Alert.alert('Thành công', 'Đăng nhập thành công!');
+                // Lưu thông tin người dùng
+                console.log(data.userDto);
+                navigation.navigate('Home'); // Chuyển đến trang Home
+            } else {
+                Alert.alert('Lỗi', data.message || 'Đăng nhập thất bại');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Lỗi', 'Có lỗi xảy ra. Vui lòng thử lại!');
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <Text style={styles.headerText}>Welcome to FLEYPET</Text>
                 <Text style={styles.subHeaderText}>Đăng nhập với tài khoản</Text>
             </View>
 
-            {/* Form */}
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
                     placeholderTextColor="#7f8c8d"
+                    value={email}
+                    onChangeText={setEmail}
                 />
                 <TextInput
                     style={styles.input}
                     placeholder="Mật khẩu"
                     placeholderTextColor="#7f8c8d"
                     secureTextEntry
+                    value={password}
+                    onChangeText={setPassword}
                 />
                 <TouchableOpacity
                     style={styles.loginButton}
-                    onPress={() => navigation.navigate('Home')}
+                    onPress={handleLogin}
                 >
                     <Text style={styles.loginButtonText}>Đăng nhập</Text>
                 </TouchableOpacity>
 
-
-                {/* Forgot Password */}
                 <TouchableOpacity>
                     <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
                 </TouchableOpacity>
 
-                {/* Social Login */}
                 <Text style={styles.orText}>Hoặc đăng nhập bằng</Text>
                 <View style={styles.socialButtons}>
                     <TouchableOpacity style={[styles.socialButton, styles.facebookButton]}>
@@ -53,7 +84,6 @@ const Login = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Sign Up */}
                 <View style={styles.signUpContainer}>
                     <Text style={styles.signUpText}>Bạn chưa có tài khoản?</Text>
                     <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

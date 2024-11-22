@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") // Ánh xạ tất cả các URL
-                .allowedOrigins("http://localhost:8081", "http://192.168.0.75:8081") // Địa chỉ frontend của bạn
+                .allowedOrigins("http://localhost:8081", "http://192.168.0.75:8081", "http://192.168.100.135:8081", "http://localhost:8080") // Địa chỉ frontend của bạn
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
