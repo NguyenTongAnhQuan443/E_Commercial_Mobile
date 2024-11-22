@@ -12,8 +12,7 @@ const SignUp = ({ navigation }) => {
                 </View>
 
                 <View style={styles.form}>
-                    <TextInput style={styles.input} placeholder="Họ" placeholderTextColor="#7f8c8d" />
-                    <TextInput style={styles.input} placeholder="Tên" placeholderTextColor="#7f8c8d" />
+                    <TextInput style={styles.input} placeholder="Họ và tên" placeholderTextColor="#7f8c8d" />
                     <TextInput style={styles.input} placeholder="Email" placeholderTextColor="#7f8c8d" />
                     <TextInput style={styles.input} placeholder="Mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
                     <TextInput style={styles.input} placeholder="Nhập lại mật khẩu" placeholderTextColor="#7f8c8d" secureTextEntry />
@@ -46,7 +45,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#33907C',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 60,
+        paddingVertical: 130,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
     },
