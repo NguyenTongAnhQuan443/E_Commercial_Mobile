@@ -28,4 +28,6 @@ public interface ProductService {
     List<ProductDto> getExclusiveOffer();
 
     List<ProductDto> getRecommendations(Long id);
+
+    List<ProductDto> getProductsByName(String name);
 }
