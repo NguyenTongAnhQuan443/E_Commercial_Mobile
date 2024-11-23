@@ -60,7 +60,7 @@ const ManageTaskScreen = ({ navigation }) => {
                 style={styles.itemImageContainer}
                 onPress={() => navigation.navigate('ProductDetails', { item })}
             >
-                <Image source={{ uri: item.images[0]?.imageUri }} style={styles.itemImage} />
+                <Image source={{ uri: item.images[0]?.imageUri }} style={styles.itemImage} resizeMode='contain' />
             </TouchableOpacity>
             <View style={styles.itemDetailContainer}>
                 <Text style={styles.itemTitle} numberOfLines={2}>
@@ -252,6 +252,15 @@ const styles = StyleSheet.create({
     flatListContainer: {
         paddingHorizontal: 10,
     },
+    // itemContainer: {
+    //     flex: 1,
+    //     margin: 5,
+    //     backgroundColor: '#fff',
+    //     borderRadius: 10,
+    //     padding: 10,
+    //     borderWidth: 1,
+    //     borderColor: '#f0f0f0',
+    // },
     itemContainer: {
         flex: 1,
         margin: 5,
@@ -260,6 +269,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderWidth: 1,
         borderColor: '#f0f0f0',
+        width: 180,
+        height: 260,
     },
     itemImageContainer: {
         width: '100%',
@@ -276,6 +287,8 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 16,
         fontWeight: '600',
+        lineHeight: 20, // Khoảng cách dòng giữa các dòng
+        textAlign: 'center', // Canh giữa văn bản
     },
     itemPriceContainer: {
         flexDirection: 'row',
