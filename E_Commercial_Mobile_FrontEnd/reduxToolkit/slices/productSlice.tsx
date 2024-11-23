@@ -20,6 +20,7 @@ const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
     try {
         const response = await axios.get(host + endPoints.fetchProducts);
         return response.data;
+
     } catch (error) {
         throw error;
     }

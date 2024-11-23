@@ -55,16 +55,21 @@ const ManageTaskScreen = ({ navigation }) => {
     };
 
     const renderItem = ({ item }) => (
-        <View style={styles.itemContainer}>
+
+        < View style={styles.itemContainer} >
             <TouchableOpacity
                 style={styles.itemImageContainer}
                 onPress={() => navigation.navigate('ProductDetails', { item })}
+            // onPress={() => console.log(item)}
             >
                 <Image source={{ uri: item.images[0]?.imageUri }} style={styles.itemImage} resizeMode='contain' />
             </TouchableOpacity>
             <View style={styles.itemDetailContainer}>
                 <Text style={styles.itemTitle} numberOfLines={2}>
                     {item.name}
+                </Text>
+                <Text style={styles.itemWeight}> KL:
+                    {item.weight}
                 </Text>
                 <View style={styles.itemPriceContainer}>
                     <Text style={styles.itemPrice}>{formatCurrencyVND(item.price)}</Text>
@@ -76,7 +81,7 @@ const ManageTaskScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </View >
     );
 
     const renderSection = (title, dataKey, data) => (
@@ -252,15 +257,6 @@ const styles = StyleSheet.create({
     flatListContainer: {
         paddingHorizontal: 10,
     },
-    // itemContainer: {
-    //     flex: 1,
-    //     margin: 5,
-    //     backgroundColor: '#fff',
-    //     borderRadius: 10,
-    //     padding: 10,
-    //     borderWidth: 1,
-    //     borderColor: '#f0f0f0',
-    // },
     itemContainer: {
         flex: 1,
         margin: 5,
@@ -270,7 +266,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f0f0f0',
         width: 180,
-        height: 260,
+        height: 280,
     },
     itemImageContainer: {
         width: '100%',
@@ -287,8 +283,8 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: 16,
         fontWeight: '600',
-        lineHeight: 20, // Khoảng cách dòng giữa các dòng
-        textAlign: 'center', // Canh giữa văn bản
+        lineHeight: 20,
+        textAlign: 'center',
     },
     itemPriceContainer: {
         flexDirection: 'row',
@@ -316,6 +312,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         resizeMode: 'cover',
     },
+    itemWeight: {
+        fontSize: 14,
+        color: 'gray',
+        marginTop: 5
+    }
 });
 
 export default ManageTaskScreen;
