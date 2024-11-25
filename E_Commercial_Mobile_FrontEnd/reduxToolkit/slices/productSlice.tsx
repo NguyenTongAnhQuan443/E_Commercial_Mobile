@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 
 // Kiểm tra môi trường để chọn host
 const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
-const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080';  // Tùy vào thiết bị giả lập hay thật
+const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.0.75:8080';  // Tùy vào thiết bị giả lập hay thật
 
 // Các endpoint
 const endPoints = {
