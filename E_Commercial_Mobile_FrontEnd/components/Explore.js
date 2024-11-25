@@ -1,55 +1,104 @@
-import { View, Text, TextInput, Image, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import React from 'react'
+import { Ionicons } from '@expo/vector-icons';
+import config from '../config/config';
 
-import { Ionicons } from '@expo/vector-icons'
+const backgroundColors = ['#F0F4FF', '#FFEBEB', '#E9F9F1', '#FFF4E4', '#F7E9FF'];
 
-// Import data test
-import productsData from '../dataTest/ProductsData'
+const Explore = ({ navigation }) => {
+    const [categories, setCategories] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-// Danh sách màu background cố định cho product
-const backgroundColors = ['#EEF7F1', '#FFFAF0', '#F0F8FF', '#FFF0F5', '#E6E6FA', '#FAFAD2', '#FEF6ED', '#FDE8E4', '#F4EBF7', '#FEF8E5', '#EDF7FC', '#EAE7FC', '#F0DAE3'];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const url = `${config.host}${config.endpoints.fetchCategories}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                setCategories(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                setIsLoading(false);
+            }
+        };
 
-const Explore = () => {
+        fetchData();
+    }, []);
+
+    const renderItem = ({ item }) => {
+        const randomColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+        return (
+            <TouchableOpacity
+                style={[styles.card, { backgroundColor: randomColor }]}
+                onPress={() => navigation.navigate('Search', { categoryId: item.id, categoryName: item.name })}
+            >
+                <Image source={{ uri: item.image }} style={styles.productImage} />
+                <Text style={styles.productName}>{item.name}</Text>
+            </TouchableOpacity>
+        );
+    };
+
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-
-            {/* Text tìm kiếm sản phẩm */}
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Tìm kiếm sản phẩm</Text>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>Khám phá sản phẩm cùng loại</Text>
+                <Ionicons name="search-outline" size={24} color="#6A6A6A" />
             </View>
-
-            {/* TextInput tìm kiếm sản phẩm */}
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <TextInput style={{ backgroundColor: '#F0F0F4', borderWidth: 0.5, height: 51, borderRadius: 20, width: '95%', paddingLeft: 40, fontSize: 16 }} placeholder='Tìm sản phẩm' />
-                <Ionicons name='search-outline' size={20} style={{ position: 'absolute', left: 20 }} />
-            </View>
-
-            {/* View - 3 */}
-            <View style={{ flex: 10 }}>
-                <FlatList
-                    data={productsData}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={renderItem}
-                    numColumns={2}
-                    contentContainerStyle={{ paddingTop: 10 }}
-                    columnWrapperStyle={{ justifyContent: 'space-around', paddingBottom: 20 }}
-                />
-
+            <View style={styles.listContainer}>
+                {isLoading ? (
+                    <Text style={styles.loadingText}>Loading...</Text>
+                ) : (
+                    <FlatList
+                        data={categories}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={renderItem}
+                        numColumns={2}
+                        contentContainerStyle={styles.flatListContent}
+                        columnWrapperStyle={styles.flatListColumn}
+                    />
+                )}
             </View>
         </SafeAreaView>
-    )
-}
-
-const renderItem = ({ item }) => {
-    const randomColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
-
-    return (
-        <View style={{ width: '45%', height: 190, backgroundColor: randomColor, alignItems: 'center', justifyContent: 'center', borderRadius: 20 }}>
-            <Image source={{ uri: item.image_url }} style={{ width: 100, height: 90 }} />
-            <Text style={{ fontSize: 16, fontWeight: 'bold', maxWidth: 150, textAlign: 'center', paddingTop: 10 }}>{item.name}</Text>
-        </View>
     );
-}
+};
 
-export default Explore
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#FFFFFF' },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderBottomWidth: 1,
+        borderColor: '#F0F0F0',
+    },
+    headerText: { fontSize: 24, fontWeight: '600', color: '#333' },
+    listContainer: { flex: 1, padding: 10 },
+    card: {
+        flex: 1,
+        height: 220,
+        margin: 10,
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
+    },
+    productImage: { width: 180, height: 150, resizeMode: 'contain', borderRadius: 20 },
+    productName: {
+        marginTop: 10,
+        fontWeight: '500',
+        fontSize: 14,
+        textAlign: 'center',
+        color: '#4A4A4A',
+    },
+    loadingText: { fontSize: 16, color: '#888', textAlign: 'center', marginTop: 20 },
+});
+
+export default Explore;

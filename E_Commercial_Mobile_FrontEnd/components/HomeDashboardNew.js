@@ -59,7 +59,7 @@ const HomeDashboardNew = () => {
       <Tab.Screen name='Home' component={HomeStack} />
       <Tab.Screen name='Explore' component={Explore} />
       {/* <Tab.Screen name='Type' component={ProductType} /> */}
-      {/* <Tab.Screen name='Search' component={SearchScreen} /> */}
+      <Tab.Screen name='Search' component={SearchScreen} />
       <Tab.Screen name='Cart' component={CartScreen} />
       <Tab.Screen name='Favourite' component={FavoritesScreen} />
       <Tab.Screen name='Account' component={AccountScreen} />

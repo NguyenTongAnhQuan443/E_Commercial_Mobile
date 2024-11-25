@@ -1,63 +1,114 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
-import { Ionicons } from '@expo/vector-icons'
+import config from '../config/config';
+import { convertToCurrency } from '../models/util';
 
-import catProducts from '../dataTest/CatProduct'
+const SearchScreen = ({ route, navigation }) => {
+    const { categoryId, categoryName } = route.params;
+    const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-const SearchScreen = () => {
-    return (
-        <SafeAreaView style={{ flex: 1, paddingLeft: 10, paddingRight: 10, }}>
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const url = `${config.host}${config.endpoints.getProductByCategoryId}`;
+                const response = await fetch(url + `${categoryId}`);
+                const data = await response.json();
+                setProducts(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Lỗi khi fetch dữ liệu sản phẩm:', error);
+                setIsLoading(false);
+            }
+        };
+        fetchProducts();
+    }, [categoryId]);
 
-            {/* View - 1 */}
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Ionicons name='arrow-back-outline' size={26} />
-                <View style={{ width: '80%', height: 45 }}>
-                    <TextInput style={{ borderWidth: 0.5, height: '100%', width: '100%', borderRadius: 10, backgroundColor: '#F2F3F2', paddingLeft: 40 }} placeholder='Tên sản phẩm' />
-                    <Ionicons name='search-outline' size={22} style={{ position: 'absolute', left: 10, top: 10 }} />
-                    <Ionicons name='close-outline' size={22} style={{ position: 'absolute', right: 20, top: 10 }} />
-                </View>
-                <Ionicons name='filter-outline' size={26} />
-            </View>
+    const handleAddToCart = (item) => {
+        console.log(`Added to cart: ${item.name}`);
+        // Logic thêm sản phẩm vào giỏ hàng có thể được thêm tại đây.
+    };
 
-            {/* View - 2 */}
-            <View style={{ flex: 11, marginTop: 10 }}>
-
-                <FlatList
-                    data={catProducts}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString() + "1"}
-                    numColumns={2}
-                    contentContainerStyle={{}}
-                    style={{}}
-                />
-            </View>
-        </SafeAreaView>
-    )
-}
-export default SearchScreen
-
-const renderItem = ({ item }) => (
-    <View style={{ width: '45%', height: 250, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: 'grey', paddingBottom: 10, paddingTop: 10, marginHorizontal: 10, marginBottom: 10 }}>
-
-        {/* Image Product */}
-        <View style={{ height: '50%', width: '85%' }}>
-            <Image source={{ uri: item.image }} style={{ width: '100%', height: '100%' }} resizeMode='center' />
-        </View>
-
-        {/* Name Product */}
-        <View style={{ width: '95%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>{item.name}</Text>
-            <Text style={{ fontSize: 16, textAlign: 'left', color: 'grey', paddingLeft: 10, paddingTop: 2 }}>1.2kg, Price</Text>
-        </View>
-
-        {/* Price -  Button Add*/}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.price}</Text>
-            <TouchableOpacity>
-                <Image source={require('../assets/icons/btnAdd.png')} style={{ width: 45, height: 45 }} />
+    const renderItem = ({ item }) => (
+        <View style={styles.card}>
+            <Image source={{ uri: item.images[0]?.imageUri }} style={styles.productImage} />
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productPrice}>{convertToCurrency(item.price)}</Text>
+            <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
+                <Text style={styles.addToCartText}>Add to Cart</Text>
             </TouchableOpacity>
         </View>
-    </View>
-)
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Ionicons name="arrow-back-outline" size={26} color="#333" onPress={() => navigation.goBack()} />
+                <Text style={styles.headerTitle}>{categoryName}</Text>
+            </View>
+            <View style={styles.listContainer}>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#4CAF50" style={styles.loadingIndicator} />
+                ) : (
+                    <FlatList
+                        data={products}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={2}
+                        contentContainerStyle={styles.flatListContent}
+                        columnWrapperStyle={styles.columnWrapper}
+                    />
+                )}
+            </View>
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#F2F3F7' },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    headerTitle: { fontSize: 20, fontWeight: '600', marginLeft: 10, color: '#333' },
+    listContainer: { flex: 1, paddingHorizontal: 10, paddingVertical: 5 },
+    loadingIndicator: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    card: {
+        flex: 1,
+        margin: 10,
+        padding: 15,
+        borderRadius: 15,
+        backgroundColor: '#FFF',
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 4,
+    },
+    productImage: { width: 120, height: 120, resizeMode: 'contain', marginBottom: 10 },
+    productName: { fontSize: 16, fontWeight: '500', color: '#333', textAlign: 'center', marginBottom: 5 },
+    productPrice: { fontSize: 14, fontWeight: '600', color: '#4CAF50', marginBottom: 10 },
+    addToCartButton: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 8,
+        marginTop: 10,
+    },
+    addToCartText: { color: '#FFF', fontSize: 14, fontWeight: '600' },
+    columnWrapper: { justifyContent: 'space-between' },
+});
+
+export default SearchScreen;
