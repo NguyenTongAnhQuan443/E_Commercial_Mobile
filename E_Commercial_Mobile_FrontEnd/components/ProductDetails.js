@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   Image,
-  TextInput,
   TouchableOpacity,
   Alert,
   FlatList,
   Dimensions,
-  ScrollView,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +15,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../reduxToolkit/slices/cartSlice';
 
+// Format tiền tệ
 const formatCurrencyVND = (amount) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -24,211 +23,309 @@ const formatCurrencyVND = (amount) => {
   }).format(amount);
 };
 
+// Kích thước màn hình
 const { width, height } = Dimensions.get('window');
 
 const ProductDetails = ({ route, navigation }) => {
-  const productImages = [
-    'https://i.ibb.co/7KBzgyJ/Vector.png',
-    'https://hoaquafuji.com/storage/app/media/anh-sua/cropped-images/tao-do-2-6-16-794-709-1623469683.jpg',
-    'https://hoaquafuji.com/storage/app/media/anh-sua/cropped-images/tao-do-2-6-16-794-709-1623469683.jpg',
-  ];
+  const dispatch = useDispatch();
 
   const itemDetail = {
     ...route.params.item,
-    comments: [
-      { user: 'Alice', comment: 'This is an amazing product!' },
-      { user: 'Bob', comment: 'Really liked the quality.' },
-    ],
-    avgRating: 4.5, // Thêm thuộc tính đánh giá trung bình
+    comments: route.params.item.comments || [],
   };
 
-  const [quantity, setQuantity] = useState(1);
+  const productImages =
+    itemDetail.images?.map((img) => img.imageUri) || [
+      'https://ampet.vn/wp-content/uploads/2022/12/Hat-cho-cho-lon-6.jpg',
+    ];
+
   const [isCommentVisible, setCommentVisible] = useState(false);
 
-  const handleIncreaseQuantity = () => setQuantity(quantity + 1);
-
-  const handleDecreaseQuantity = () => {
-    if (quantity > 1) setQuantity(quantity - 1);
-  };
+  // Thêm dữ liệu đánh giá nếu không có comment
+  if (itemDetail.comments.length === 0 && itemDetail.reviews?.length > 0) {
+    itemDetail.comments = itemDetail.reviews.map((review) => ({
+      user: review.user?.fullName || 'Người dùng ẩn danh',
+      comment: review.comment,
+    }));
+  }
 
   const toggleCommentVisibility = () => setCommentVisible(!isCommentVisible);
 
-  const dispatch = useDispatch();
-
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...itemDetail, quantity }));
+    dispatch(addToCart({ ...itemDetail, quantity: 1 }));
     Alert.alert(
-      'Success',
-      'Product added to cart',
+      'Thành công',
+      'Sản phẩm đã được thêm vào giỏ hàng',
       [
-        { text: 'Go to Cart', onPress: () => navigation.navigate('Cart') },
+        { text: 'Đến Giỏ Hàng', onPress: () => navigation.navigate('Cart') },
         { text: 'OK', onPress: () => console.log('OK Pressed') },
       ]
     );
   };
 
-  const renderItem = ({ item }) => (
-    <Image
-      source={{ uri: item }}
-      style={{
-        width: width,
-        height: height * 0.4,
-        borderBottomRightRadius: 30,
-        borderBottomLeftRadius: 30,
-        resizeMode: 'contain',
-      }}
-    />
+  const renderImageItem = ({ item }) => (
+    <Image source={{ uri: item }} style={styles.image} />
+  );
+
+  const renderCommentItem = ({ item }) => (
+    <View style={styles.commentContainer}>
+      <View style={styles.commentHeader}>
+        <View style={styles.userAvatar}>
+          <Text style={styles.avatarText}>
+            {item.user.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+        <Text style={styles.commentUser}>{item.user}</Text>
+      </View>
+      <Text style={styles.commentText}>{item.comment}</Text>
+    </View>
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* Back Button */}
-      <TouchableOpacity style={{ left: 20, zIndex: 1 }} onPress={() => navigation.goBack()}>
+    <SafeAreaView style={styles.container}>
+      {/* Nút quay lại */}
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Icon name="arrow-left" size={26} color="#000" />
       </TouchableOpacity>
 
-      {/* Scrollable Content */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        {/* Product Images */}
-        <View style={{ flex: 5, backgroundColor: '#F2F3F2' }}>
-          <FlatList
-            data={productImages}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={width}
-            decelerationRate="fast"
-            nestedScrollEnabled // Thêm nestedScrollEnabled
-            style={{ flex: 1 }}
-          />
-        </View>
+      {/* Danh sách hình ảnh và bình luận */}
+      <FlatList
+        data={isCommentVisible ? itemDetail.comments : []}
+        renderItem={renderCommentItem}
+        keyExtractor={(item, index) => index.toString()}
+        nestedScrollEnabled
+        contentContainerStyle={{ paddingBottom: 80 }}
+        ListHeaderComponent={
+          <>
+            {/* Hình ảnh sản phẩm */}
+            <FlatList
+              data={productImages}
+              renderItem={renderImageItem}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              nestedScrollEnabled
+              style={styles.imageList}
+            />
 
-        {/* Product Details */}
-        <View style={{ flex: 7, paddingLeft: 10, paddingRight: 10 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 }}>
-            <Text
-              style={{ fontSize: 24, fontWeight: 'bold', flexWrap: 'wrap', textAlign: 'left' }}
-              numberOfLines={2}
-              ellipsizeMode="tail"
-            >
-              {itemDetail.name}
-            </Text>
-            <Ionicons name="heart-outline" size={24} />
-          </View>
-
-          {/* Quantity and Price */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 }}>
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity onPress={handleDecreaseQuantity}>
-                <Ionicons name="remove-outline" size={24} />
-              </TouchableOpacity>
-              <TextInput
-                style={{
-                  borderWidth: 1,
-                  width: 50,
-                  height: 25,
-                  marginHorizontal: 10,
-                  borderRadius: 8,
-                  textAlign: 'center',
-                }}
-                value={quantity.toString()}
-                editable={false}
-              />
-              <TouchableOpacity onPress={handleIncreaseQuantity}>
-                <Ionicons name="add-outline" size={24} color="#58B379" />
-              </TouchableOpacity>
-            </View>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#53b175' }}>
-              {formatCurrencyVND(itemDetail.price)}
-            </Text>
-          </View>
-
-          {/* Product Description */}
-          <Text style={{ fontSize: 18, fontWeight: 'bold', marginTop: 10 }}>Chi tiết sản phẩm</Text>
-          <Text style={{ fontSize: 16, color: '#7C7C7C', marginTop: 10 }}>{itemDetail.description}</Text>
-
-          {/* Weight */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Khối lượng</Text>
-            <View
-              style={{
-                width: 60,
-                height: 25,
-                backgroundColor: '#EBEBEB',
-                borderRadius: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: 'grey' }}>{itemDetail.weight}</Text>
-            </View>
-          </View>
-
-          {/* Reviews */}
-          <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Review</Text>
-              <TouchableOpacity
-                style={{ flexDirection: 'row', alignItems: 'center' }}
-                onPress={toggleCommentVisibility}
-              >
-                {Array.from({ length: 5 }, (_, index) => (
-                  <Ionicons
-                    key={index}
-                    name={index < Math.round(itemDetail.avgRating) ? 'star' : 'star-outline'}
-                    color={'#F3603F'}
-                    size={18}
-                    style={{ marginLeft: 2 }}
-                  />
-                ))}
-                <Ionicons
-                  name={isCommentVisible ? 'chevron-up' : 'chevron-down'}
-                  size={24}
-                  style={{ paddingLeft: 20 }}
-                />
-              </TouchableOpacity>
-            </View>
-            {isCommentVisible && (
-              <View style={{ marginTop: 10, padding: 10, backgroundColor: '#F8F8F8', borderRadius: 10 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Comments</Text>
-                <FlatList
-                  data={itemDetail.comments}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <View style={{ marginBottom: 10 }}>
-                      <Text style={{ fontWeight: 'bold' }}>{item.user}</Text>
-                      <Text>{item.comment}</Text>
-                    </View>
-                  )}
-                  ListEmptyComponent={<Text>No comments yet</Text>}
-                  nestedScrollEnabled // Thêm thuộc tính này
-                />
+            {/* Chi tiết sản phẩm */}
+            <View style={styles.detailsContainer}>
+              <View style={styles.detailsHeader}>
+                <Text style={styles.productName} numberOfLines={2} ellipsizeMode="tail">
+                  {itemDetail.name}
+                </Text>
+                <Ionicons name="heart-outline" size={24} />
               </View>
-            )}
-          </View>
-        </View>
 
-        {/* Add to Basket Button */}
-        <View style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 20 }}>
-          <TouchableOpacity
-            style={{
-              width: '90%',
-              height: 50,
-              backgroundColor: '#53B175',
-              borderRadius: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={handleAddToCart}
-          >
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>Add To Basket</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+              <View style={styles.weightContainer}>
+                <Text style={styles.weightLabel}>Khối lượng:</Text>
+                <Text style={styles.weightValue}>{itemDetail.weight}</Text>
+              </View>
+
+              <View style={styles.quantityPriceContainer}>
+                <Text style={styles.descriptionTitle}>Giá bán:</Text>
+                <Text style={styles.price}>
+                  {formatCurrencyVND(itemDetail.price)}
+                </Text>
+              </View>
+
+              <Text style={styles.descriptionTitle}>Chi tiết sản phẩm</Text>
+              <Text style={styles.descriptionText}>{itemDetail.description}</Text>
+
+              {/* Phần đánh giá */}
+              <View>
+                <View style={styles.reviewHeader}>
+                  <Text style={styles.descriptionTitle}>Đánh giá</Text>
+                  {/* Dãy ngôi sao nằm ngang */}
+                  <View style={styles.starsContainer}>
+                    {Array.from({ length: 5 }, (_, index) => (
+                      <Ionicons
+                        key={index}
+                        name={
+                          index < Math.floor(itemDetail.avgRating)
+                            ? 'star'
+                            : index < itemDetail.avgRating
+                              ? 'star-half-outline'
+                              : 'star-outline'
+                        }
+                        color={'#F3603F'}
+                        size={18}
+                        style={styles.star}
+                      />
+                    ))}
+
+                    <TouchableOpacity onPress={toggleCommentVisibility}>
+                      <Ionicons
+                        name={isCommentVisible ? 'chevron-up' : 'chevron-down'}
+                        size={24}
+                        style={styles.chevron}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </>
+        }
+      />
+
+      {/* Nút thêm vào giỏ hàng */}
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+          <Text style={styles.addToCartText}>Thêm vào giỏ hàng</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  backButton: {
+    left: 20,
+    zIndex: 1,
+    position: 'absolute',
+    top: 10,
+  },
+  image: {
+    width: width,
+    height: height * 0.4,
+    resizeMode: 'contain',
+  },
+  imageList: {
+    marginBottom: 20,
+  },
+  detailsContainer: {
+    paddingHorizontal: 10,
+  },
+  detailsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  productName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    flexWrap: 'wrap',
+    textAlign: 'left',
+  },
+  weightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  weightLabel: {
+    fontSize: 16,
+    color: '#7C7C7C',
+  },
+  weightValue: {
+    fontSize: 16,
+    color: '#7C7C7C',
+    marginLeft: 10,
+  },
+  quantityPriceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  price: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#53b175',
+  },
+  descriptionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  descriptionText: {
+    fontSize: 16,
+    color: '#7C7C7C',
+    marginTop: 10,
+    marginBottom: 15,
+  },
+  reviewHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  star: {
+    marginHorizontal: 2,
+  },
+  chevron: {
+    paddingLeft: 10,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'white',
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  addToCartButton: {
+    width: '90%',
+    height: 50,
+    backgroundColor: '#53B175',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addToCartText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  commentContainer: {
+    marginVertical: 10,
+    padding: 15,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  commentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  userAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2196F3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  avatarText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  commentUser: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333333',
+  },
+  commentText: {
+    fontSize: 14,
+    color: '#666666',
+  },
+});
 
 export default ProductDetails;

@@ -40,7 +40,7 @@ const ManageTaskScreen = ({ navigation }) => {
     const [expandedSections, setExpandedSections] = useState({
         exclusiveOffer: false,
         bestSeller: false,
-        groceries: false,
+        groceriecẻs: false,
     });
 
     useEffect(() => {
@@ -168,8 +168,8 @@ const ManageTaskScreen = ({ navigation }) => {
 
                         {/* Sections */}
                         {renderSection('Khuyến mãi độc quyền', 'exclusiveOffer', exclusiveOffer)}
-                        {renderSection('Best Selling', 'bestSeller', bestSeller)}
-                        {renderSection('Groceries', 'groceries', bestSeller)}
+                        {renderSection('Bán chạy nhất', 'bestSeller', bestSeller)}
+                        {renderSection('Hàng tạp hóa', 'groceries', bestSeller)}
                     </View>
                 )}
                 keyExtractor={(item, index) => index.toString()}
