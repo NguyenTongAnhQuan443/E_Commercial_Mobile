@@ -13,20 +13,8 @@ import CreditCardModel from '../models/CreditCardModel';
 import { clearCart } from '../reduxToolkit/slices/cartSlice';
 import UserModel from '../models/UserModel';
 
-
-// Mock data for delivery and payment methods
-// const deliveryMethods = [
-//   { id: 'standard', name: 'Standard Delivery', price: 20000 },
-//   { id: 'express', name: 'Express Delivery', price: 50000 },
-// ];
-
-// const paymentMethods = [
-//   { id: 'credit_card', name: 'Credit Card', icon: CreditCard },
-//   { id: 'cash', name: 'Cash on Delivery', icon: Wallet },
-// ];
-
 // Step components
-const DeliveryStep = ({ onSave, onCancel, initialData }) => {
+const DeliveryStep = ({ onSave, onCancel, initialData }) => { 
   const [address, setAddress] = useState(initialData?.address || {
     street: '',
     city: '',
@@ -143,18 +131,22 @@ const PaymentStep = ({ onSave, onCancel, initialData }) => {
   const dispatch = useDispatch();
   const paymentMethods = useSelector(state => state.payment.paymentMethods);
 
+  console.log("Payment Methods: ", paymentMethods);
+
+  useEffect(() => {
+    dispatch(fetchPaymentMethods());
+  }, []);
+
+  console.log("Initial Data: ", paymentMethods);
+
   const [method, setMethod] = useState(initialData?.method || paymentMethods[0].name);
   const [cardDetails, setCardDetails] = useState(initialData?.cardDetails || {
     number: '',
     expiry: '',
     cvv: '',
-  });
+  }); 
   const [errors, setErrors] = useState({});
   
-  useEffect(() => {
-    dispatch(fetchPaymentMethods());
-  }, []);
-
   const paymentMethodsWithIcons = paymentMethods.map((method) => ({
     ...method,
     icon: method.name === 'Credit Card' ? CreditCard : Wallet,  

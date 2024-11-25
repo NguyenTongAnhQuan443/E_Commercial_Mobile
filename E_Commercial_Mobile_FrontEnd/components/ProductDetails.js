@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -28,11 +28,12 @@ const { width, height } = Dimensions.get('window');
 
 const ProductDetails = ({ route, navigation }) => {
   const dispatch = useDispatch();
-
   const itemDetail = {
     ...route.params.item,
-    comments: route.params.item.comments || [],
+    comments: route.params.item.reviews || [],
   };
+
+  console.log("🚀 ~ ProductDetails ~ itemDetail", itemDetail)  
 
   const productImages =
     itemDetail.images?.map((img) => img.imageUri) || [
@@ -42,7 +43,7 @@ const ProductDetails = ({ route, navigation }) => {
   const [isCommentVisible, setCommentVisible] = useState(false);
 
   // Thêm dữ liệu đánh giá nếu không có comment
-  if (itemDetail.comments.length === 0 && itemDetail.reviews?.length > 0) {
+  if (itemDetail.reviews?.length > 0) {
     itemDetail.comments = itemDetail.reviews.map((review) => ({
       user: review.user?.fullName || 'Người dùng ẩn danh',
       comment: review.comment,
@@ -52,7 +53,8 @@ const ProductDetails = ({ route, navigation }) => {
   const toggleCommentVisibility = () => setCommentVisible(!isCommentVisible);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...itemDetail, quantity: 1 }));
+    console.log('Add to cart:', itemDetail);
+    dispatch(addToCart({ product: itemDetail, quantity: 1, price: itemDetail.price }));
     Alert.alert(
       'Thành công',
       'Sản phẩm đã được thêm vào giỏ hàng',

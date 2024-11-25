@@ -4,6 +4,7 @@ import ProductModel from "../../models/ProductModel";
 import { Platform } from "react-native";
 import config from "../../config/config";
 
+
 const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
     try {
         const response = await axios.get(config.host + config.endpoints.fetchProducts);

@@ -73,4 +73,6 @@ def user_based_recommendation(user_id, top_n=5):
 
     return product_df[product_df['id'].isin(recommendations.index)][:top_n]
 
+
+
     
