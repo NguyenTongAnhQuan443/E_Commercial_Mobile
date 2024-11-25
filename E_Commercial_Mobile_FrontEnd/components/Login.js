@@ -3,12 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Platform } 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-// Tách API
-// Kiểm tra xem đang chạy trên thiết bị thật hay giả lập
-const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
-
-const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080';  // Tùy vào thiết bị giả lập hay thật
-const endPoint = '/api/auth/login';
+import config from '../config/config';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -16,7 +11,7 @@ const Login = ({ navigation }) => {
 
     const handleLogin = async () => {
         try {
-            const url = host + endPoint;
+            const url = config.host + config.endpoints.login;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

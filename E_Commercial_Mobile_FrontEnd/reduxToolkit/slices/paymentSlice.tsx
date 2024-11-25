@@ -2,8 +2,10 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import PaymentMethodModel from "../../models/PaymentMethodModel";
 
+import config from "../../config/config";
 const fetchPaymentMethods = createAsyncThunk("paymentMethods/fetchPaymentMethods", async () => {
     try {
+        const url = config.host + config.endpoints.fetchPaymentMethods
         const response = await axios.get("http://localhost:8080/api/payment-method");
         return response.data;
     } catch (error) {

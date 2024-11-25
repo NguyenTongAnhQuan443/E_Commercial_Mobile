@@ -2,9 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import CategoryModel from "../../models/CategoryModel";
 
+import config from "../../config/config";
+
 const fetchCategories = createAsyncThunk("categories/fetchCategories", async () => {
     try {
-        const response = await axios.get("http://localhost:8080/api/category");
+        const url = config.host + config.endpoints.fetchCategories
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         throw error;

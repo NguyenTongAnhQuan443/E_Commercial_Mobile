@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import DeliveryMethodModel from "../../models/DeliveryMethodModel";
 
+import config from "../../config/config";
 const fetchDeliveryMethods = createAsyncThunk("delivery/fetchDeliveryMethods", async () => {
     try {
-        const response = await axios.get("http://localhost:8080/api/delivery-method");
+        const url = config.host + config.endpoints.fetchDeliveryMethods
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         throw error;

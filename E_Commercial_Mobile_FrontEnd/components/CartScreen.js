@@ -21,6 +21,7 @@ const CartScreen = () => {
         setCartItems(cart);
     }, [cart]);
 
+
     // Calculate total
     useEffect(() => {
         setTotal(totalPrice);
@@ -31,7 +32,7 @@ const CartScreen = () => {
         return (
             <View key={item.id} style={styles.cartItem}>
                 <View style={styles.cartItemImageContainer}>
-                    <Image source={{uri: item.product.images[0].imageUri}} style={styles.cartItemImage} />
+                    <Image source={{ uri: item.product.images[0].imageUri }} style={styles.cartItemImage} />
                 </View>
                 <View style={styles.cartItemDetails}>
                     <Text style={styles.cartItemTitle}>
@@ -47,7 +48,7 @@ const CartScreen = () => {
                         <TextInput
                             value={item.quantity.toString()}
                             style={styles.quantityInput}
-                            onChangeText={(text) => dispatch(changeQuantity({...item, quantity: parseInt(text)}))}
+                            onChangeText={(text) => dispatch(changeQuantity({ ...item, quantity: parseInt(text) }))}
                             keyboardType='numeric'
                         />
                         <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(increaseQuantity(item))}>
@@ -100,7 +101,7 @@ const CartScreen = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <CheckoutModal 
+            <CheckoutModal
                 isVisible={isCheckoutModalVisible}
                 onClose={() => setIsCheckoutModalVisible(false)}
                 initialTotalCost={total}

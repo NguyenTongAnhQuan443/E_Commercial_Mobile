@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import OrderModel from "../../models/OrderModel";
 
+import config from "../../config/config";
 const createOrder = createAsyncThunk("orders/createOrder", async (order: OrderModel) => {
     try {
-        const response = await axios.post("http://localhost:8080/api/orders", order);
+        const url = config.host + config.endpoints.createOrder
+        const response = await axios.post(url, order);
         return response.data;
     } catch (error) {
         throw error;
@@ -25,7 +27,7 @@ const orderSlice = createSlice({
     initialState: {
         orders: [] as OrderModel[],
         order: {} as OrderModel,
-        errorResponse: "" as string,       
+        errorResponse: "" as string,
     },
     reducers: {
         setOrder: (state, action) => {

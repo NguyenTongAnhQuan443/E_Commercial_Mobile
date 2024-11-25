@@ -60,7 +60,6 @@ const ManageTaskScreen = ({ navigation }) => {
             <TouchableOpacity
                 style={styles.itemImageContainer}
                 onPress={() => navigation.navigate('ProductDetails', { item })}
-            // onPress={() => console.log(item)}
             >
                 <Image source={{ uri: item.images[0]?.imageUri }} style={styles.itemImage} resizeMode='contain' />
             </TouchableOpacity>

@@ -2,23 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import ProductModel from "../../models/ProductModel";
 import { Platform } from "react-native";
-
-// Kiểm tra môi trường để chọn host
-const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
-const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080';  // Tùy vào thiết bị giả lập hay thật
-
-// Các endpoint
-const endPoints = {
-    fetchProducts: '/api/products',
-    getProductById: '/api/products/',
-    getProductByCategoryId: '/api/products/by-category/',
-    getProductExclusiveOffer: '/api/products/exclusive-offer',
-    getProductBestSeller: '/api/products/best-seller',
-};
+import config from "../../config/config";
 
 const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
     try {
-        const response = await axios.get(host + endPoints.fetchProducts);
+        const response = await axios.get(config.host + config.endpoints.fetchProducts);
         return response.data;
 
     } catch (error) {
@@ -28,7 +16,7 @@ const fetchProducts = createAsyncThunk("products/fetchProducts", async () => {
 
 const getProductById = createAsyncThunk("products/getProductById", async (id: number) => {
     try {
-        const response = await axios.get(`${host}${endPoints.getProductById}${id}`);
+        const response = await axios.get(`${config.host}${config.endpoints.getProductById}${id}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -37,7 +25,7 @@ const getProductById = createAsyncThunk("products/getProductById", async (id: nu
 
 const getProductByCategoryId = createAsyncThunk("products/getProductByCategoryId", async (id: number) => {
     try {
-        const response = await axios.get(`${host}${endPoints.getProductByCategoryId}${id}`);
+        const response = await axios.get(`${config.host}${config.endpoints.getProductByCategoryId}${id}`);
         return response.data;
     } catch (error) {
         throw error;
@@ -46,7 +34,7 @@ const getProductByCategoryId = createAsyncThunk("products/getProductByCategoryId
 
 const getProductExclusiveOffer = createAsyncThunk("products/getProductExclusiveOffer", async () => {
     try {
-        const response = await axios.get(host + endPoints.getProductExclusiveOffer);
+        const response = await axios.get(config.host + config.endpoints.getProductExclusiveOffer);
         return response.data;
     } catch (error) {
         throw error;
@@ -55,7 +43,7 @@ const getProductExclusiveOffer = createAsyncThunk("products/getProductExclusiveO
 
 const getProductBestSeller = createAsyncThunk("products/getProductBestSeller", async () => {
     try {
-        const response = await axios.get(host + endPoints.getProductBestSeller);
+        const response = await axios.get(config.host + config.endpoints.getProductBestSeller);
         return response.data;
     } catch (error) {
         throw error;

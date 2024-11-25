@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Tách API thành hằng số
-const host = 'http://192.168.100.135:8080';
-const registerEndpoint = '/api/auth/register';
+import config from '../config/config';
 
 const SignUp = ({ navigation }) => {
     const [fullName, setFullName] = useState('');
@@ -19,7 +17,8 @@ const SignUp = ({ navigation }) => {
         }
 
         try {
-            const response = await fetch(host + registerEndpoint, {
+            const url = config.host + config.endpoints.register
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
