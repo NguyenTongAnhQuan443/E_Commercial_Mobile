@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './HomeScreen';
 import ProductDetails from './ProductDetails';
-
+import SearchScreen from './SearchScreen';
 const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {

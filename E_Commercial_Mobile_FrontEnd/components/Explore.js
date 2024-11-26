@@ -3,7 +3,7 @@ import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import config from '../config/config';
-
+import SearchScreen from './SearchScreen';
 const backgroundColors = ['#F0F4FF', '#FFEBEB', '#E9F9F1', '#FFF4E4', '#F7E9FF'];
 
 const Explore = ({ navigation }) => {
@@ -32,7 +32,7 @@ const Explore = ({ navigation }) => {
         return (
             <TouchableOpacity
                 style={[styles.card, { backgroundColor: randomColor }]}
-                onPress={() => navigation.navigate('Search', { categoryId: item.id, categoryName: item.name })}
+                onPress={() => navigation.navigate('SearchScreen', { categoryId: item.id, categoryName: item.name })} // Thêm dòng này để điều hướng
             >
                 <Image source={{ uri: item.image }} style={styles.productImage} />
                 <Text style={styles.productName}>{item.name}</Text>
@@ -40,11 +40,12 @@ const Explore = ({ navigation }) => {
         );
     };
 
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerText}>Khám phá sản phẩm cùng loại</Text>
-                <Ionicons name="search-outline" size={24} color="#6A6A6A" />
+                {/* <Ionicons name="search-outline" size={24} color="#6A6A6A" /> */}
             </View>
             <View style={styles.listContainer}>
                 {isLoading ? (

@@ -24,7 +24,8 @@ const config = {
         fetchPaymentMethods: '/api/payment-method',
         // promotionSlice
         fetchPromotions: '/api/promotion',
-
+        // fillter name product
+        filterProductsByName: '/api/products/filter',
     },
 };
 
