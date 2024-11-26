@@ -8,14 +8,15 @@ import {
   FlatList,
   Dimensions,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../reduxToolkit/slices/cartSlice';
+import config from '../config/config';
 
-// Format tiền tệ
 const formatCurrencyVND = (amount) => {
   return new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -23,7 +24,6 @@ const formatCurrencyVND = (amount) => {
   }).format(amount);
 };
 
-// Kích thước màn hình
 const { width, height } = Dimensions.get('window');
 
 const ProductDetails = ({ route, navigation }) => {
@@ -33,73 +33,89 @@ const ProductDetails = ({ route, navigation }) => {
     comments: route.params.item.reviews || [],
   };
 
-  console.log("🚀 ~ ProductDetails ~ itemDetail", itemDetail)  
-
   const productImages =
     itemDetail.images?.map((img) => img.imageUri) || [
       'https://ampet.vn/wp-content/uploads/2022/12/Hat-cho-cho-lon-6.jpg',
     ];
 
   const [isCommentVisible, setCommentVisible] = useState(false);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Thêm dữ liệu đánh giá nếu không có comment
-  if (itemDetail.reviews?.length > 0) {
-    itemDetail.comments = itemDetail.reviews.map((review) => ({
-      user: review.user?.fullName || 'Người dùng ẩn danh',
-      comment: review.comment,
-    }));
-  }
+  useEffect(() => {
+    fetch(config.host + config.endpoints.recommendations + itemDetail.id)
+      .then((response) => response.json())
+      .then((data) => {
+        setRelatedProducts(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching related products:', error);
+        setLoading(false);
+      });
+  }, []);
 
   const toggleCommentVisibility = () => setCommentVisible(!isCommentVisible);
 
-  const handleAddToCart = () => {
-    console.log('Add to cart:', itemDetail);
-    dispatch(addToCart({ product: itemDetail, quantity: 1, price: itemDetail.price }));
-    Alert.alert(
-      'Thành công',
-      'Sản phẩm đã được thêm vào giỏ hàng',
-      [
-        { text: 'Đến Giỏ Hàng', onPress: () => navigation.navigate('Cart') },
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
-      ]
-    );
+  const handleAddToCart = (item) => {
+    dispatch(addToCart({ product: item, quantity: 1, price: item.price }));
+    Alert.alert('Thành công', 'Sản phẩm đã được thêm vào giỏ hàng');
   };
 
   const renderImageItem = ({ item }) => (
     <Image source={{ uri: item }} style={styles.image} />
   );
 
-  const renderCommentItem = ({ item }) => (
-    <View style={styles.commentContainer}>
-      <View style={styles.commentHeader}>
-        <View style={styles.userAvatar}>
-          <Text style={styles.avatarText}>
-            {item.user.charAt(0).toUpperCase()}
-          </Text>
+  const renderCommentItem = ({ item }) => {
+    const userName = item.user?.fullName || 'Người dùng ẩn danh';
+    const commentText = item.comment || 'Không có nội dung';
+
+    return (
+      <View style={styles.commentContainer}>
+        <View style={styles.commentHeader}>
+          <View style={styles.userAvatar}>
+            <Text style={styles.avatarText}>
+              {typeof userName === 'string' ? userName.charAt(0).toUpperCase() : '?'}
+            </Text>
+          </View>
+          <Text style={styles.commentUser}>{userName}</Text>
         </View>
-        <Text style={styles.commentUser}>{item.user}</Text>
+        <Text style={styles.commentText}>{commentText}</Text>
       </View>
-      <Text style={styles.commentText}>{item.comment}</Text>
+    );
+  };
+
+  const renderRelatedProductItem = ({ item }) => (
+    <View style={styles.relatedProductContainer}>
+      <Image source={{ uri: item.images[0]?.imageUri }} style={styles.relatedProductImage} />
+      <Text style={styles.relatedProductName} numberOfLines={2}>
+        {item.name}
+      </Text>
+      <Text style={styles.relatedProductPrice}>
+        {formatCurrencyVND(item.price)}
+      </Text>
+      <TouchableOpacity
+        style={styles.relatedProductButton}
+        onPress={() => handleAddToCart(item)} // Sử dụng logic thêm vào giỏ hàng
+      >
+        <Ionicons name="cart-outline" size={24} color="#FFF" />
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Nút quay lại */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Icon name="arrow-left" size={26} color="#000" />
       </TouchableOpacity>
 
-      {/* Danh sách hình ảnh và bình luận */}
       <FlatList
-        data={isCommentVisible ? itemDetail.comments : []}
-        renderItem={renderCommentItem}
-        keyExtractor={(item, index) => index.toString()}
+        data={[]}
+        keyExtractor={() => ''}
         nestedScrollEnabled
         contentContainerStyle={{ paddingBottom: 80 }}
         ListHeaderComponent={
           <>
-            {/* Hình ảnh sản phẩm */}
             <FlatList
               data={productImages}
               renderItem={renderImageItem}
@@ -111,7 +127,6 @@ const ProductDetails = ({ route, navigation }) => {
               style={styles.imageList}
             />
 
-            {/* Chi tiết sản phẩm */}
             <View style={styles.detailsContainer}>
               <View style={styles.detailsHeader}>
                 <Text style={styles.productName} numberOfLines={2} ellipsizeMode="tail">
@@ -135,11 +150,9 @@ const ProductDetails = ({ route, navigation }) => {
               <Text style={styles.descriptionTitle}>Chi tiết sản phẩm</Text>
               <Text style={styles.descriptionText}>{itemDetail.description}</Text>
 
-              {/* Phần đánh giá */}
               <View>
                 <View style={styles.reviewHeader}>
                   <Text style={styles.descriptionTitle}>Đánh giá</Text>
-                  {/* Dãy ngôi sao nằm ngang */}
                   <View style={styles.starsContainer}>
                     {Array.from({ length: 5 }, (_, index) => (
                       <Ionicons
@@ -166,15 +179,38 @@ const ProductDetails = ({ route, navigation }) => {
                     </TouchableOpacity>
                   </View>
                 </View>
+                {isCommentVisible && itemDetail.comments.length > 0 && (
+                  <FlatList
+                    data={itemDetail.comments}
+                    renderItem={renderCommentItem}
+                    keyExtractor={(item, index) => `comment-${index}`}
+                    nestedScrollEnabled
+                  />
+                )}
+              </View>
+
+              <View style={{ marginTop: 20 }}>
+                <Text style={styles.descriptionTitle}>Sản phẩm tương tự</Text>
+                {loading ? (
+                  <ActivityIndicator size="large" color="#53B175" />
+                ) : (
+                  <FlatList
+                    data={relatedProducts}
+                    renderItem={renderRelatedProductItem}
+                    keyExtractor={(item) => item.id.toString()}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 10 }}
+                  />
+                )}
               </View>
             </View>
           </>
         }
       />
 
-      {/* Nút thêm vào giỏ hàng */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+        <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(itemDetail)}>
           <Text style={styles.addToCartText}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
       </View>
@@ -185,7 +221,7 @@ const ProductDetails = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
   },
   backButton: {
     left: 20,
@@ -272,7 +308,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     paddingVertical: 10,
     alignItems: 'center',
     borderTopWidth: 1,
@@ -281,7 +317,7 @@ const styles = StyleSheet.create({
   addToCartButton: {
     width: '90%',
     height: 50,
-    backgroundColor: '#53B175',
+    backgroundColor: '#53b175',
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -289,12 +325,49 @@ const styles = StyleSheet.create({
   addToCartText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
+    color: '#fff',
+  },
+  relatedProductContainer: {
+    width: 150,
+    marginRight: 12,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    alignItems: 'center',
+  },
+  relatedProductImage: {
+    width: 120,
+    height: 100,
+    resizeMode: 'contain',
+    marginBottom: 8,
+  },
+  relatedProductName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  relatedProductPrice: {
+    fontSize: 14,
+    color: '#53b175',
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  relatedProductButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#53b175',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   commentContainer: {
     marginVertical: 10,
     padding: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#E0E0E0',
@@ -314,7 +387,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   avatarText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },

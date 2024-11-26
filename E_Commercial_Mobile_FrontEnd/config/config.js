@@ -26,6 +26,8 @@ const config = {
         fetchPromotions: '/api/promotion',
         // fillter name product
         filterProductsByName: '/api/products/filter',
+        // recomment product
+        recommendations: '/api/products/recommendations/product/',
     },
 };
 
