@@ -36,7 +36,7 @@ const DeliveryStep = ({ onSave, onCancel, initialData }) => {
   const validateAddress = () => {
     const newErrors = {};
     if (!address.street.trim()) {
-        newErrors.street = 'Street Address is required';
+      newErrors.street = 'Street Address is required';
     }
     if (!address.city.trim()) {
         newErrors.city = 'City is required';

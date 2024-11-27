@@ -16,7 +16,6 @@ import Swiper from 'react-native-swiper';
 import { addToCart } from '../reduxToolkit/slices/cartSlice';
 import { fetchProducts, getProductBestSeller, getProductExclusiveOffer } from '../reduxToolkit/slices/productSlice';
 
-// Banner
 const BANNER_IMAGES = [
     'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3a1fb4169601075.644fdce41162b.jpg',
     'https://mir-s3-cdn-cf.behance.net/project_modules/1400/3ff3e4169601075.6450bfb338386.jpg',
@@ -24,7 +23,6 @@ const BANNER_IMAGES = [
     'https://mir-s3-cdn-cf.behance.net/project_modules/1400/5517dc169601075.6450bfb3377b9.jpg',
 ];
 
-// Hàm Định Dạng Tiền Tệ
 const formatCurrencyVND = (amount) => {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
@@ -43,6 +41,8 @@ const ManageTaskScreen = ({ navigation }) => {
         groceriecẻs: false,
     });
 
+    const [searchTerm, setSearchTerm] = useState('');
+
     useEffect(() => {
         dispatch(fetchProducts());
         dispatch(getProductBestSeller());
@@ -54,13 +54,15 @@ const ManageTaskScreen = ({ navigation }) => {
         Alert.alert('Thành công', 'Sản phẩm đã được thêm vào giỏ hàng');
     };
 
-    const renderItem = ({ item }) => (
+    const handleSearch = () => {
+        navigation.navigate('SearchScreen', { searchTerm });
+    };
 
-        < View style={styles.itemContainer} >
+    const renderItem = ({ item }) => (
+        <View style={styles.itemContainer}>
             <TouchableOpacity
                 style={styles.itemImageContainer}
-                onPress={() => navigation.navigate('ProductDetails', { item})}
-            // onPress={() => console.log(item)}
+                onPress={() => navigation.navigate('ProductDetails', { item })}
             >
                 <Image source={{ uri: item.images[0]?.imageUri }} style={styles.itemImage} resizeMode='contain' />
             </TouchableOpacity>
@@ -68,9 +70,7 @@ const ManageTaskScreen = ({ navigation }) => {
                 <Text style={styles.itemTitle} numberOfLines={2}>
                     {item.name}
                 </Text>
-                <Text style={styles.itemWeight}> KL:
-                    {item.weight}
-                </Text>
+                <Text style={styles.itemWeight}>KL: {item.weight}</Text>
                 <View style={styles.itemPriceContainer}>
                     <Text style={styles.itemPrice}>{formatCurrencyVND(item.price)}</Text>
                     <TouchableOpacity
@@ -81,7 +81,7 @@ const ManageTaskScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View >
+        </View>
     );
 
     const renderSection = (title, dataKey, data) => (
@@ -106,7 +106,6 @@ const ManageTaskScreen = ({ navigation }) => {
                     data={data}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id.toString()}
-                    key={2}
                     numColumns={2}
                     contentContainerStyle={styles.flatListContainer}
                 />
@@ -129,7 +128,6 @@ const ManageTaskScreen = ({ navigation }) => {
                 data={[]}
                 ListHeaderComponent={() => (
                     <View>
-                        {/* Header */}
                         <View style={styles.logoContainer}>
                             <View style={styles.locationContainer}>
                                 <Image source={require('../assets/images/cat.png')} style={styles.logoImage} />
@@ -137,16 +135,19 @@ const ManageTaskScreen = ({ navigation }) => {
                             </View>
                         </View>
 
-                        {/* Search */}
                         <View style={styles.searchContainer}>
-                            <Icon name="search" size={20} color={'black'} />
+                            <Icon name="search" size={20} color={'black'} style={{ marginLeft: 30 }} />
                             <TextInput
-                                placeholder="Search Store"
+                                placeholder="Tìm kiếm sản phẩm"
                                 style={styles.searchInput}
+                                value={searchTerm}
+                                onChangeText={setSearchTerm}
                             />
+                            <TouchableOpacity onPress={handleSearch}>
+                                <Text style={styles.searchButton}>Tìm kiếm</Text>
+                            </TouchableOpacity>
                         </View>
 
-                        {/* Banner Carousel */}
                         <View style={styles.bannerContainer}>
                             <Swiper
                                 autoplay
@@ -166,7 +167,6 @@ const ManageTaskScreen = ({ navigation }) => {
                             </Swiper>
                         </View>
 
-                        {/* Sections */}
                         {renderSection('Khuyến mãi độc quyền', 'exclusiveOffer', exclusiveOffer)}
                         {renderSection('Bán chạy nhất', 'bestSeller', bestSeller)}
                         {renderSection('Hàng tạp hóa', 'groceries', bestSeller)}
@@ -177,7 +177,6 @@ const ManageTaskScreen = ({ navigation }) => {
         </SafeAreaView>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -316,7 +315,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'gray',
         marginTop: 5
-    }
+    },
+    searchButton: {
+        fontSize: 16,
+        color: '#53B175',
+        fontWeight: '600',
+        right: 40
+    },
 });
 
 export default ManageTaskScreen;

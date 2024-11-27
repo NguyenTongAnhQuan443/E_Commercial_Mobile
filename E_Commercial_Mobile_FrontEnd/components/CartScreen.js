@@ -1,9 +1,22 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, FlatList } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    FlatList,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeFromCart, increaseQuantity, changeQuantity, decreaseQuantity } from '../reduxToolkit/slices/cartSlice';
+import {
+    removeFromCart,
+    increaseQuantity,
+    changeQuantity,
+    decreaseQuantity,
+} from '../reduxToolkit/slices/cartSlice';
 import { convertToCurrency } from '../models/util';
 import { CheckoutModal } from './Checkout-modal';
 
@@ -13,94 +26,92 @@ const CartScreen = () => {
     const [isCheckoutModalVisible, setIsCheckoutModalVisible] = useState(false);
 
     const dispatch = useDispatch();
-    const cart = useSelector(state => state.cart.cartItems);
-    const totalPrice = useSelector(state => state.cart.totalPrices);
+    const cart = useSelector((state) => state.cart.cartItems);
+    const totalPrice = useSelector((state) => state.cart.totalPrices);
 
-    // Set cart items
     useEffect(() => {
         setCartItems(cart);
     }, [cart]);
 
-    // Calculate total
     useEffect(() => {
         setTotal(totalPrice);
     }, [totalPrice]);
 
-
-    const renderCartItems = (item) => {
-        return (
-            <View key={item.id} style={styles.cartItem}>
-                <View style={styles.cartItemImageContainer}>
-                    <Image source={{uri: item.product.images[0].imageUri}} style={styles.cartItemImage} />
-                </View>
-                <View style={styles.cartItemDetails}>
-                    <Text style={styles.cartItemTitle}>
-                        {item.product.name}
-                    </Text>
-                    <Text style={styles.cartItemWeight}>
-                        {item.product.weight}
-                    </Text>
-                    <View style={styles.cartItemQuantity}>
-                        <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(decreaseQuantity(item))}>
-                            <Icon name='minus' size={20} color={'gray'} />
-                        </TouchableOpacity>
-                        <TextInput
-                            value={item.quantity.toString()}
-                            style={styles.quantityInput}
-                            onChangeText={(text) => dispatch(changeQuantity({...item, quantity: parseInt(text)}))}
-                            keyboardType='numeric'
-                        />
-                        <TouchableOpacity style={styles.quantityButton} onPress={() => dispatch(increaseQuantity(item))}>
-                            <Icon name='plus' size={20} color={'#53b175'} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.cartItemPriceContainer}>
-                    <View style={styles.cartItemPrice}>
-                        <TouchableOpacity style={styles.deleteButton} onPress={() => dispatch(removeFromCart(item))}>
-                            <Icon name='x' size={20} color={'gray'} />
-                        </TouchableOpacity>
-                        <Text style={styles.cartItemPriceText}>
-                            {convertToCurrency(item.price)}
-                        </Text>
-                    </View>
+    const renderCartItems = ({ item }) => (
+        <View style={styles.cartItem}>
+            <Image
+                source={{ uri: item.product.images[0].imageUri }}
+                style={styles.cartItemImage}
+            />
+            <View style={styles.cartItemDetails}>
+                <Text style={styles.cartItemTitle}>{item.product.name}</Text>
+                <Text style={styles.cartItemWeight}>{item.product.weight}</Text>
+                <View style={styles.cartItemQuantity}>
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => dispatch(decreaseQuantity(item))}
+                    >
+                        <Icon name="minus" size={18} color="#444" />
+                    </TouchableOpacity>
+                    <TextInput
+                        value={item.quantity.toString()}
+                        style={styles.quantityInput}
+                        onChangeText={(text) =>
+                            dispatch(changeQuantity({ ...item, quantity: parseInt(text) }))
+                        }
+                        keyboardType="numeric"
+                    />
+                    <TouchableOpacity
+                        style={styles.quantityButton}
+                        onPress={() => dispatch(increaseQuantity(item))}
+                    >
+                        <Icon name="plus" size={18} color="#53b175" />
+                    </TouchableOpacity>
                 </View>
             </View>
-        );
-    }
+            <View style={styles.cartItemPriceContainer}>
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => dispatch(removeFromCart(item))}
+                >
+                    <Icon name="x" size={20} color="#888" />
+                </TouchableOpacity>
+                <Text style={styles.cartItemPriceText}>
+                    {convertToCurrency(item.price)}
+                </Text>
+            </View>
+        </View>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>My Cart</Text>
+                <Text style={styles.headerTitle}>Giỏ hàng của tôi</Text>
             </View>
             <View style={styles.body}>
-                <View style={styles.divider} />
                 {cartItems.length > 0 ? (
                     <FlatList
-                        showsVerticalScrollIndicator={false}
                         data={cartItems}
-                        renderItem={({ item }) => renderCartItems(item)}
-                        keyExtractor={item => item.product.id.toString()}
+                        renderItem={renderCartItems}
+                        keyExtractor={(item) => item.product.id.toString()}
+                        showsVerticalScrollIndicator={false}
                     />
                 ) : (
                     <View style={styles.emptyCart}>
-                        <Text style={styles.emptyCartText}>Your cart is empty</Text>
+                        <Text style={styles.emptyCartText}>Giỏ hàng trống !!</Text>
                     </View>
                 )}
-                <View style={styles.divider} />
             </View>
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.footerButton} onPress={() => setIsCheckoutModalVisible(true)}>
-                    <Text style={styles.footerText}>
-                        Go to Checkout
-                    </Text>
-                    <Text style={styles.footerTotal}>
-                        {convertToCurrency(total)}
-                    </Text>
+                <TouchableOpacity
+                    style={styles.footerButton}
+                    onPress={() => setIsCheckoutModalVisible(true)}
+                >
+                    <Text style={styles.footerText}>Đi đến thanh toán</Text>
+                    <Text style={styles.footerTotal}>{convertToCurrency(total)}</Text>
                 </TouchableOpacity>
             </View>
-            <CheckoutModal 
+            <CheckoutModal
                 isVisible={isCheckoutModalVisible}
                 onClose={() => setIsCheckoutModalVisible(false)}
                 initialTotalCost={total}
@@ -108,126 +119,85 @@ const CartScreen = () => {
             />
         </SafeAreaView>
     );
-}
-
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#f9f9f9',
     },
     header: {
-        width: '100%',
-        paddingVertical: 35,
+        paddingVertical: 20,
         borderBottomWidth: 1,
-        borderBottomColor: '#e0e0e0',
+        borderBottomColor: '#ddd',
+        backgroundColor: '#fff',
     },
     headerTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 20,
+        fontWeight: '600',
         textAlign: 'center',
     },
     body: {
         flex: 1,
-        width: '90%',
+        padding: 10,
     },
-
-    //  Cart Item
     cartItem: {
         flexDirection: 'row',
-        borderBottomColor: '#e0e0e0',
-        borderBottomWidth: 1,
-        paddingVertical: 30,
-    },
-    cartItemImageContainer: {
-        padding: 10,
-        justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        padding: 15,
+        backgroundColor: '#fff',
+        marginVertical: 8,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 2,
     },
     cartItemImage: {
-        width: 75,
-        height: '100%',
-        resizeMode: 'contain',
+        width: 60,
+        height: 60,
+        resizeMode: 'cover',
+        borderRadius: 8,
     },
     cartItemDetails: {
         flex: 1,
-        marginLeft: 10,
+        marginHorizontal: 15,
     },
     cartItemTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#333',
     },
     cartItemWeight: {
-        fontSize: 16,
-        color: 'gray',
+        fontSize: 14,
+        color: '#666',
     },
     cartItemQuantity: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start',
-        marginTop: 15,
+        marginTop: 8,
     },
     quantityButton: {
-        padding: 10,
-        borderRadius: 15,
+        padding: 5,
         borderWidth: 1,
-        borderColor: '#e0e0e0',
+        borderColor: '#ddd',
+        borderRadius: 5,
     },
     quantityInput: {
-        marginHorizontal: 20,
-        width: '15%',
+        width: 40,
         textAlign: 'center',
-        fontSize: 18,
-        fontWeight: 'bold',
+        fontSize: 14,
+        marginHorizontal: 5,
     },
     cartItemPriceContainer: {
-        justifyContent: 'center',
-    },
-    cartItemPrice: {
-        flexDirection: 'column',
         alignItems: 'flex-end',
     },
     deleteButton: {
-        padding: 5,
-        marginBottom: 35,
+        marginBottom: 10,
     },
     cartItemPriceText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-    },
-
-    // Button Footer
-    footer: {
-        width: '100%',
-        padding: 20,
-    },
-    footerButton: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 18,
-        backgroundColor: '#53b175',
-        borderRadius: 15,
-    },
-    footerText: {
-        fontSize: 18,
-        color: '#fff',
-        fontWeight: 'bold',
-        flex: 11,
-        textAlign: 'center',
-    },
-    footerTotal: {
-        fontSize: 12,
-        color: '#fff',
-        fontWeight: 'bold',
-        backgroundColor: '#489E67',
-        padding: 5,
-        borderRadius: 5,
+        fontSize: 16,
+        fontWeight: '600',
     },
     emptyCart: {
         flex: 1,
@@ -235,9 +205,31 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     emptyCartText: {
-        fontSize: 18,
+        fontSize: 16,
+        color: '#999',
     },
-
+    footer: {
+        padding: 15,
+        backgroundColor: '#fff',
+    },
+    footerButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#53b175',
+        padding: 15,
+        borderRadius: 10,
+    },
+    footerText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#fff',
+    },
+    footerTotal: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#fff',
+    },
 });
 
 export default CartScreen;

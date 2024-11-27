@@ -1,63 +1,159 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, TextInput } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, FlatList, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../reduxToolkit/slices/cartSlice';
+import config from '../config/config';
+import { convertToCurrency } from '../models/util';
 
-import { Ionicons } from '@expo/vector-icons'
+const SearchScreen = ({ route, navigation }) => {
+    const { categoryId, categoryName } = route.params;
+    const [products, setProducts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const dispatch = useDispatch();
 
-import catProducts from '../dataTest/CatProduct'
+    const { searchTerm } = route.params;
 
-const SearchScreen = () => {
-    return (
-        <SafeAreaView style={{ flex: 1, paddingLeft: 10, paddingRight: 10, }}>
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                let url = '';
+                if (searchTerm) {
+                    // Nếu có searchTerm từ HomeScreen, sử dụng API filter theo tên sản phẩm
+                    // url = `${config.host}/api/products/filter?name=${searchTerm}`;
+                    url = `${config.host}${config.endpoints.filterProductsByName}?name=${searchTerm}`;
+                } else if (categoryId) {
+                    // Nếu có categoryId từ ExploreScreen, fetch sản phẩm theo categoryId
+                    url = `${config.host}${config.endpoints.getProductByCategoryId}${categoryId}`;
+                }
 
-            {/* View - 1 */}
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Ionicons name='arrow-back-outline' size={26} />
-                <View style={{ width: '80%', height: 45 }}>
-                    <TextInput style={{ borderWidth: 0.5, height: '100%', width: '100%', borderRadius: 10, backgroundColor: '#F2F3F2', paddingLeft: 40 }} placeholder='Tên sản phẩm' />
-                    <Ionicons name='search-outline' size={22} style={{ position: 'absolute', left: 10, top: 10 }} />
-                    <Ionicons name='close-outline' size={22} style={{ position: 'absolute', right: 20, top: 10 }} />
-                </View>
-                <Ionicons name='filter-outline' size={26} />
-            </View>
+                const response = await fetch(url);
+                const data = await response.json();
+                setProducts(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Lỗi khi fetch dữ liệu sản phẩm:', error);
+                setIsLoading(false);
+            }
+        };
 
-            {/* View - 2 */}
-            <View style={{ flex: 11, marginTop: 10 }}>
+        fetchProducts();
+    }, [categoryId, searchTerm]); // Thêm searchTerm vào dependency
 
-                <FlatList
-                    data={catProducts}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString() + "1"}
-                    numColumns={2}
-                    contentContainerStyle={{}}
-                    style={{}}
-                />
-            </View>
-        </SafeAreaView>
-    )
-}
-export default SearchScreen
+    // Hàm thêm sản phẩm vào giỏ hàng
+    const handleAddToCart = (item) => {
+        dispatch(addToCart({ product: item, quantity: 1, price: item.price }));
+        Alert.alert('Thành công', 'Sản phẩm đã được thêm vào giỏ hàng');
+    };
 
-const renderItem = ({ item }) => (
-    <View style={{ width: '45%', height: 250, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: 'grey', paddingBottom: 10, paddingTop: 10, marginHorizontal: 10, marginBottom: 10 }}>
-
-        {/* Image Product */}
-        <View style={{ height: '50%', width: '85%' }}>
-            <Image source={{ uri: item.image }} style={{ width: '100%', height: '100%' }} resizeMode='center' />
-        </View>
-
-        {/* Name Product */}
-        <View style={{ width: '95%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>{item.name}</Text>
-            <Text style={{ fontSize: 16, textAlign: 'left', color: 'grey', paddingLeft: 10, paddingTop: 2 }}>1.2kg, Price</Text>
-        </View>
-
-        {/* Price -  Button Add*/}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '90%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.price}</Text>
-            <TouchableOpacity>
-                <Image source={require('../assets/icons/btnAdd.png')} style={{ width: 45, height: 45 }} />
+    const renderItem = ({ item }) => (
+        <View style={styles.card}>
+            <Image source={{ uri: item.images[0]?.imageUri }} style={styles.productImage} />
+            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productPrice}>{convertToCurrency(item.price)}</Text>
+            <TouchableOpacity
+                style={styles.addToCartButton}
+                onPress={() => handleAddToCart(item)}
+            >
+                <Ionicons name="cart" size={24} color="#FFF" />
             </TouchableOpacity>
         </View>
-    </View>
-)
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <View style={styles.header}>
+                <Ionicons name="arrow-back-outline" size={26} color="#333" onPress={() => navigation.goBack()} />
+                <Text style={styles.headerTitle}>{categoryName}</Text>
+            </View>
+            <View style={styles.listContainer}>
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#4CAF50" style={styles.loadingIndicator} />
+                ) : (
+                    <FlatList
+                        data={products}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={2}
+                        contentContainerStyle={styles.flatListContent}
+                        columnWrapperStyle={styles.columnWrapper}
+                    />
+                )}
+            </View>
+        </SafeAreaView>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: { flex: 1, backgroundColor: '#F2F3F7' },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#FFF',
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 10,
+    },
+    listContainer: {
+        flex: 1,
+        padding: 10,
+    },
+    card: {
+        width: '45%',
+        height: 250,
+        marginBottom: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 5,
+    },
+    productImage: {
+        width: '100%',
+        height: 120,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    productName: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 5,
+    },
+    productPrice: {
+        fontSize: 14,
+        color: '#4CAF50',
+        marginBottom: 10,
+    },
+    addToCartButton: {
+        backgroundColor: '#4CAF50',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+    },
+    loadingIndicator: {
+        marginTop: 50,
+    },
+    flatListContent: {
+        justifyContent: 'space-between',
+    },
+    columnWrapper: {
+        justifyContent: 'space-between',
+    },
+});
+
+export default SearchScreen;

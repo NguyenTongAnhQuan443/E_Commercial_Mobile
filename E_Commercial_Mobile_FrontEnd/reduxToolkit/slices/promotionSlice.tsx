@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import PromotionModel from "../../models/Promotion";
 
+import config from "../../config/config";
 const fetchPromotions = createAsyncThunk("promotions/fetchPromotions", async () => {
     try {
-        const response = await axios.get("http://localhost:8080/api/promotion");
+        const url = config.host + config.endpoints.fetchPromotions
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         throw error;

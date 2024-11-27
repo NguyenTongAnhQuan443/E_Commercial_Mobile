@@ -5,9 +5,13 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchIp } from '../reduxToolkit/slices/ipSlice';
 
+<<<<<<< HEAD
 // Tách API
 
 const endPoint = '/api/auth/login';
+=======
+import config from '../config/config';
+>>>>>>> 2e613a8a4df40fce14d830675d6c504be675b200
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
@@ -21,8 +25,12 @@ const Login = ({ navigation }) => {
 
     const handleLogin = async () => {
         try {
+<<<<<<< HEAD
             const url = ipAddress + endPoint;
             console.log('URL:', url); 
+=======
+            const url = config.host + config.endpoints.login;
+>>>>>>> 2e613a8a4df40fce14d830675d6c504be675b200
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
