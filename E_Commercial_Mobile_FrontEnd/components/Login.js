@@ -3,19 +3,12 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Platform } 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchIp } from '../reduxToolkit/slices/ipSlice';
 
 import config from '../config/config';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const dispatch = useDispatch();
-    const ipAddress = useSelector((state) => state.ip.ipAddress);
-
-    useEffect(() => {
-        dispatch(fetchIp());
-    }, [dispatch]);
 
     const handleLogin = async () => {
         try {
