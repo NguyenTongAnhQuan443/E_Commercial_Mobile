@@ -18,4 +18,6 @@ public class WishlistDto implements Serializable {
     String name;
     LocalDate addedDate;
     boolean isPurchase;
+    ProductDto product;
+    UserDto user;
 }

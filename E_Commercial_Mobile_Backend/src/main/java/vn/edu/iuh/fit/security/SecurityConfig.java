@@ -46,6 +46,8 @@ public class SecurityConfig {
                 configure -> configure
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/wish-list/**").permitAll()
         );
 
         // Configure CORS to allow requests from the front-end host

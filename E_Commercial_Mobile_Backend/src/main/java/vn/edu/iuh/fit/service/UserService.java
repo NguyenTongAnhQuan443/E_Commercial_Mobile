@@ -13,10 +13,17 @@ package vn.edu.iuh.fit.service;
  */
 
 import vn.edu.iuh.fit.dto.auth.LoginDto;
+import vn.edu.iuh.fit.dto.auth.PasswordChangeRequestDto;
 import vn.edu.iuh.fit.dto.auth.RegisterDto;
 import vn.edu.iuh.fit.dto.UserDto;
 
 public interface UserService {
     RegisterDto register(RegisterDto registerDTO);
     UserDto login(LoginDto loginDto);
+
+    UserDto updateUser(UserDto userDto);
+
+    UserDto changePassword(PasswordChangeRequestDto passwordChangeRequestDto);
+
+    UserDto getUserByEmail(String email);
 }

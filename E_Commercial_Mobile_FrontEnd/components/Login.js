@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchIp } from '../reduxToolkit/slices/ipSlice';
 
 // Tách API
-// Kiểm tra xem đang chạy trên thiết bị thật hay giả lập
-const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
 
-const host = !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080';  // Tùy vào thiết bị giả lập hay thật
 const endPoint = '/api/auth/login';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const ipAddress = useSelector((state) => state.ip.ipAddress);
+
+    useEffect(() => {
+        dispatch(fetchIp());
+    }, [dispatch]);
 
     const handleLogin = async () => {
         try {
-            const url = host + endPoint;
+            const url = ipAddress + endPoint;
+            console.log('URL:', url); 
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

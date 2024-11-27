@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.converter.UserMapper;
 import vn.edu.iuh.fit.dto.auth.LoginDto;
+import vn.edu.iuh.fit.dto.auth.PasswordChangeRequestDto;
 import vn.edu.iuh.fit.dto.auth.RegisterDto;
 import vn.edu.iuh.fit.dto.UserDto;
 import vn.edu.iuh.fit.entity.User;
@@ -57,6 +58,41 @@ public class UserServiceImpl implements UserService {
 
         if (user != null && bCryptPasswordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             return userMapper.toDto(user);
+        }
+
+        return null;
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto) {
+        User user = userRepository.findUserByEmail(userDto.getEmail()).orElse(null);
+
+        if (user != null) {
+            userDto.setId(user.getId());
+            return userMapper.toDto(userRepository.save(userMapper.toEntity(userDto)));
+        }
+
+        return null;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email).orElse(null);
+
+        if (user != null) {
+            return userMapper.toDto(user);
+        }
+
+        return null;
+    }
+
+    @Override
+    public UserDto changePassword(PasswordChangeRequestDto passwordChangeRequestDto) {
+        User user = userRepository.findUserByEmail(passwordChangeRequestDto.getEmail()).orElse(null);
+
+        if (user != null && bCryptPasswordEncoder.matches(passwordChangeRequestDto.getOldPassword(), user.getPassword())) {
+            user.setPassword(bCryptPasswordEncoder.encode(passwordChangeRequestDto.getNewPassword()));
+            return userMapper.toDto(userRepository.save(user));
         }
 
         return null;

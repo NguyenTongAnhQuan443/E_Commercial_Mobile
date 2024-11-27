@@ -6,6 +6,7 @@ import promotionReducer from "./slices/promotionSlice";
 import deliveryReducer from "./slices/deliverySlice";
 import paymentReducer from "./slices/paymentSlice";
 import orderReducer from "./slices/orderSlice";
+import ipReducer from "./slices/ipSlice";
 
 const store = configureStore({
     reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
         delivery: deliveryReducer,
         payment: paymentReducer,
         order: orderReducer,
+        ip: ipReducer,
     },
 });
 
