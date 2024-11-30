@@ -12,6 +12,7 @@ import SearchScreen from './SearchScreen';
 import Signin from './Signin';
 import AccountScreen from './AccountScreen';
 import OrderAcceptedScreen from './OrderAcceptedScreen';
+import ChatScreen from './ChatScreen';
 
 import Icon from 'react-native-vector-icons/Feather';
 import FavoritesScreen from './FavoritesScreen';
@@ -59,6 +60,7 @@ const HomeDashboardNew = () => {
       <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Favourite" component={FavoritesScreen} />
       <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Chat" component={ChatScreen} />
     </Tab.Navigator>
   );
 

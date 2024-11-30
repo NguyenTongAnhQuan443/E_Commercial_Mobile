@@ -30,4 +30,6 @@ public interface ProductService {
     List<ProductDto> getRecommendations(Long id);
 
     List<ProductDto> getProductsByName(String name);
+
+    String chatbot(String message);
 }

@@ -13,10 +13,12 @@ package vn.edu.iuh.fit.service.impl;
  */
 
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import vn.edu.iuh.fit.converter.ProductMapper;
+import vn.edu.iuh.fit.dto.ChatbotRequestDto;
 import vn.edu.iuh.fit.dto.ProductDto;
 import vn.edu.iuh.fit.dto.api.ExternalProductDto;
 import vn.edu.iuh.fit.entity.Product;
@@ -96,6 +98,33 @@ public class ProductServiceImpl implements ProductService {
                 .map(productMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public String chatbot(String message) {
+        // Địa chỉ API của chatbot (giả sử bạn sử dụng một API bên ngoài)
+        String apiUrl = "http://localhost:5001/api/chatbot"; // Thay đổi URL nếu cần
+
+        // Tạo đối tượng chứa câu hỏi gửi tới API
+        ChatbotRequestDto requestDto = new ChatbotRequestDto();
+        requestDto.setQuestion(message);
+
+        try {
+            // Gửi yêu cầu POST đến API chatbot và nhận phản hồi
+            String response = restTemplate.exchange(
+                    apiUrl,
+                    HttpMethod.POST,
+                    new HttpEntity<>(requestDto),
+                    String.class
+            ).getBody();
+
+            // Trả về câu trả lời từ chatbot
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Đã xảy ra lỗi trong khi kết nối với chatbot.";
+        }
+    }
+
 
     private List<ProductDto> getProductsDto(List<ExternalProductDto> externalProductDtos) {
         return externalProductDtos.stream().map(externalProductDto -> {

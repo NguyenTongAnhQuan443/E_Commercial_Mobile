@@ -4,6 +4,7 @@ const isSimulator = Platform.OS === 'ios' || Platform.OS === 'android';
 
 const config = {
     host: !isSimulator ? 'http://localhost:8080' : 'http://192.168.100.135:8080',
+    hostChatbot: 'http://localhost:5001/api/chatbot',
     endpoints: {
         login: '/api/auth/login',
         signUp: '/api/auth/signup',
@@ -28,6 +29,8 @@ const config = {
         filterProductsByName: '/api/products/filter',
         // recomment product
         recommendations: '/api/products/recommendations/product/',
+        // chatbot
+        chatbot: '/api/chatbot',
     },
 };
 
