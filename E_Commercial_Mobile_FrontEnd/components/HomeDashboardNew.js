@@ -13,7 +13,6 @@ import Signin from './Signin';
 import AccountScreen from './AccountScreen';
 import OrderAcceptedScreen from './OrderAcceptedScreen';
 
-
 import Icon from 'react-native-vector-icons/Feather';
 import FavoritesScreen from './FavoritesScreen';
 import HomeStack from './HomeStack';
