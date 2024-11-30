@@ -6,6 +6,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
 import config from '../config/config';
+
 const API_URL = config.host + config.endpoints.chatbot;
 
 export default function ChatScreen() {
@@ -44,11 +45,13 @@ export default function ChatScreen() {
         const isUser = item.sender === 'user';
         return (
             <View style={[styles.messageContainer, isUser ? styles.userMessageContainer : styles.botMessageContainer]}>
-                <Image
-                    source={isUser ? require('../assets/icons/profile.png') : require('../assets/icons/chatbot64.png')}
-                    style={styles.avatar}
-                />
-                <View style={styles.messageBubble}>
+                <View style={isUser ? styles.userMessage : styles.botMessage}>
+                    {/* Avatar */}
+                    <Image
+                        source={isUser ? require('../assets/icons/profile.png') : require('../assets/icons/chatbot64.png')}
+                        style={[styles.avatar, isUser && styles.avatarUser]} // User avatar on the right
+                    />
+                    {/* Message */}
                     <Text style={styles.messageText}>{item.text}</Text>
                 </View>
             </View>
@@ -57,32 +60,26 @@ export default function ChatScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.chatContainer}>
                     <FlatList
-                        ref={flatListRef}
                         data={messages}
                         renderItem={renderMessage}
                         keyExtractor={(item, index) => index.toString()}
-                        inverted
-                        style={styles.messageList}
+                        ref={flatListRef}
+                        onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
+                        onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
                     />
-                    {isBotTyping && (
-                        <View style={styles.typingContainer}>
-                            <ActivityIndicator size="small" color="#0084FF" />
-                            <Text style={styles.typingText}>Bot is typing...</Text>
-                        </View>
-                    )}
+                    {isBotTyping && <ActivityIndicator size="small" color="#000" style={styles.typingIndicator} />}
                     <View style={styles.inputContainer}>
                         <TextInput
                             style={styles.input}
-                            placeholder="Type a message..."
                             value={inputMessage}
                             onChangeText={setInputMessage}
-                            onSubmitEditing={sendMessage}
+                            placeholder="Nhập câu hỏi của bạn ..."
                         />
                         <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-                            <Text style={styles.sendButtonText}>Send</Text>
+                            <Text style={styles.sendButtonText}>Gửi</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -94,80 +91,77 @@ export default function ChatScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9F9F9',
+        backgroundColor: '#fff',
     },
     chatContainer: {
         flex: 1,
         paddingHorizontal: 16,
-        paddingVertical: 8,
-    },
-    messageList: {
-        flex: 1,
     },
     messageContainer: {
         flexDirection: 'row',
-        marginBottom: 16,
-        alignItems: 'flex-start',
+        marginVertical: 5,
     },
     userMessageContainer: {
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
+        justifyContent: 'flex-end', // User messages are on the right
+        alignSelf: 'flex-end',
     },
     botMessageContainer: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        justifyContent: 'flex-start', // Bot messages are on the left
+        alignSelf: 'flex-start',
+    },
+    userMessage: {
+        flexDirection: 'row-reverse', // User's messages are reversed
+        alignItems: 'center',
+    },
+    botMessage: {
+        flexDirection: 'row', // Bot's messages stay normal
+        alignItems: 'center',
     },
     avatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        marginHorizontal: 10,
-    },
-    messageBubble: {
-        maxWidth: '80%',
-        padding: 12,
+        width: 30,
+        height: 30,
         borderRadius: 15,
-        backgroundColor: '#E1E1E1',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        marginHorizontal: 5,
+    },
+    avatarUser: {
+        marginRight: 10, // Add space between the avatar and the text for user
     },
     messageText: {
+        maxWidth: '80%',
+        padding: 10,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 10,
         fontSize: 16,
         color: '#333',
+    },
+    typingIndicator: {
+        position: 'absolute',
+        bottom: 10,
+        left: '50%',
+        transform: [{ translateX: -15 }],
     },
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingBottom: 16,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#ddd',
     },
     input: {
         flex: 1,
-        height: 45,
-        borderRadius: 25,
-        backgroundColor: '#FFF',
-        paddingHorizontal: 16,
+        padding: 10,
+        backgroundColor: '#f1f1f1',
+        borderRadius: 20,
         marginRight: 10,
-        borderColor: '#ddd',
-        borderWidth: 1,
     },
     sendButton: {
-        padding: 10,
-        backgroundColor: '#0084FF',
-        borderRadius: 25,
+        backgroundColor: '#007bff',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
     },
     sendButtonText: {
-        color: '#FFF',
+        color: '#fff',
         fontSize: 16,
-    },
-    typingContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 10,
-    },
-    typingText: {
-        marginLeft: 8,
-        color: '#888',
     },
 });

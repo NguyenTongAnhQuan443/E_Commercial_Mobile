@@ -41,6 +41,9 @@ const HomeDashboardNew = () => {
           } else if (route.name === 'Account') {
             iconName = 'user';
           }
+          else if (route.name === 'Chatbot') {
+            iconName = 'message-square';
+          }
 
           return (
             <Icon
@@ -58,9 +61,9 @@ const HomeDashboardNew = () => {
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Explore" component={Explore} />
       <Tab.Screen name="Cart" component={CartScreen} />
-      <Tab.Screen name="Favourite" component={FavoritesScreen} />
+      {/* <Tab.Screen name="Favourite" component={FavoritesScreen} /> */}
       <Tab.Screen name="Account" component={AccountScreen} />
-      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Chatbot" component={ChatScreen} />
     </Tab.Navigator>
   );
 
