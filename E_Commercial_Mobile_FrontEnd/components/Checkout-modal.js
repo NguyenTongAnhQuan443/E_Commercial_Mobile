@@ -14,7 +14,7 @@ import { clearCart } from '../reduxToolkit/slices/cartSlice';
 import UserModel from '../models/UserModel';
 
 // Step components
-const DeliveryStep = ({ onSave, onCancel, initialData }) => { 
+const DeliveryStep = ({ onSave, onCancel, initialData }) => {
   const [address, setAddress] = useState(initialData?.address || {
     street: '',
     city: '',
@@ -39,13 +39,13 @@ const DeliveryStep = ({ onSave, onCancel, initialData }) => {
       newErrors.street = 'Street Address is required';
     }
     if (!address.city.trim()) {
-        newErrors.city = 'City is required';
+      newErrors.city = 'City is required';
     }
     if (!address.state.trim()) {
-        newErrors.state = 'State is required';
+      newErrors.state = 'State is required';
     }
     if (!address.zipCode.trim()) {
-        newErrors.zipCode = 'ZIP Code is required';
+      newErrors.zipCode = 'ZIP Code is required';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -144,12 +144,12 @@ const PaymentStep = ({ onSave, onCancel, initialData }) => {
     number: '',
     expiry: '',
     cvv: '',
-  }); 
+  });
   const [errors, setErrors] = useState({});
-  
+
   const paymentMethodsWithIcons = paymentMethods.map((method) => ({
     ...method,
-    icon: method.name === 'Credit Card' ? CreditCard : Wallet,  
+    icon: method.name === 'Credit Card' ? CreditCard : Wallet,
   }));
 
   const validatePayment = () => {
@@ -235,9 +235,9 @@ const PaymentStep = ({ onSave, onCancel, initialData }) => {
 };
 
 const PromoCodeStep = ({ onSave, onCancel, initialData }) => {
-  
+
   const promoCodes = useSelector(state => state.promotion.promotions);
-  
+
   const [promoCode, setPromoCode] = useState(initialData?.promoCode || '');
   const [discount, setDiscount] = useState(initialData?.discount || 0);
   const [error, setError] = useState('');
@@ -248,16 +248,16 @@ const PromoCodeStep = ({ onSave, onCancel, initialData }) => {
 
   const dispatch = useDispatch();
 
-    const validatePromoCode = (code) => {
-      console.log("Promo Codes: ", promoCodes);
-      const discount = promoCodes.find(promo => promo.code === code &&
-        new Date(promo.startDate) <= new Date() &&
-        new Date(promo.endDate) >= new Date() &&
-        promo.active === true
-      );
+  const validatePromoCode = (code) => {
+    console.log("Promo Codes: ", promoCodes);
+    const discount = promoCodes.find(promo => promo.code === code &&
+      new Date(promo.startDate) <= new Date() &&
+      new Date(promo.endDate) >= new Date() &&
+      promo.active === true
+    );
 
-      return discount ? discount.discount : 0;
-    };
+    return discount ? discount.discount : 0;
+  };
 
   const applyPromoCode = () => {
     const discountPercentage = validatePromoCode(promoCode);
@@ -273,12 +273,12 @@ const PromoCodeStep = ({ onSave, onCancel, initialData }) => {
 
   return (
     <View style={styles.stepContainer}>
-        <View style={styles.stepHeader}>
-            <TouchableOpacity onPress={onCancel} style={styles.backButton}>
-                <ArrowLeft size={24} color="#000" />
-            </TouchableOpacity>
-            <Text style={styles.stepTitle}>Promo Code</Text>
-        </View>
+      <View style={styles.stepHeader}>
+        <TouchableOpacity onPress={onCancel} style={styles.backButton}>
+          <ArrowLeft size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.stepTitle}>Promo Code</Text>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Enter Promo Code"
@@ -303,6 +303,8 @@ const PromoCodeStep = ({ onSave, onCancel, initialData }) => {
 };
 
 export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) => {
+  // Lấy thông tin người dùng từ Redux store
+  const user = useSelector((state) => state.user.user);
   const [currentStep, setCurrentStep] = useState(null);
   const [checkoutData, setCheckoutData] = useState({
     delivery: null,
@@ -340,7 +342,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
   // Calculate delivery date
   const calculateDeliveryDate = (method) => {
     const deliveryMethod = deliveryMethods.find(m => m.id === method);
-    
+
     if (deliveryMethod.name === 'Standard Delivery') {
       return new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000);
     } else if (deliveryMethod.name === 'Express Delivery') {
@@ -351,7 +353,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
   // Get delivery fee
   const getDeliveryFee = (method) => {
     const deliveryMethod = deliveryMethods.find(m => m.id === method);
-    return deliveryMethod? deliveryMethod.fee : 0;
+    return deliveryMethod ? deliveryMethod.fee : 0;
   };
 
   const getDelivery = (method) => {
@@ -372,7 +374,7 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
   };
 
   const handleStepSave = (step, data) => {
-    setCheckoutData( prevDate => ({
+    setCheckoutData(prevDate => ({
       ...prevDate,
       [step]: data,
     }));
@@ -465,13 +467,13 @@ export const CheckoutModal = ({ isVisible, onClose, initialTotalCost, items }) =
               onPress={() => {
                 // Handle order placement
                 console.log('Order placed:', checkoutData.promoCode);
-                
+
                 const orderDetails = items.map(item => new OrderDetailModel(null, item.product.id, item.quantity, item.price));
 
-                const creditCard = new CreditCardModel(null, checkoutData.payment.cardDetails .number, checkoutData.payment.cardDetails.expiry, checkoutData.payment.cardDetails.cvv);
-                
+                const creditCard = new CreditCardModel(null, checkoutData.payment.cardDetails.number, checkoutData.payment.cardDetails.expiry, checkoutData.payment.cardDetails.cvv);
+
                 // Mock user id
-                const user = new UserModel(5, 'Nguyễn Thanh Nhứt', 'thanhnhutcu@gmail.com');
+                // const user = new UserModel(5, 'Nguyễn Thanh Nhứt', 'thanhnhutcu@gmail.com');
 
                 const order = new OrderModel(
                   new Date(),
@@ -683,7 +685,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#4CAF50',
     fontWeight: '600',
-},
+  },
   errorText: {
     color: 'red',
     marginBottom: 10,

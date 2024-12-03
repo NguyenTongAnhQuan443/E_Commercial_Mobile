@@ -6,9 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import config from '../config/config';
 
+import { login } from '../reduxToolkit/slices/userSlice';  // Import login action
+
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();  // Khai báo useDispatch
 
     const handleLogin = async () => {
         try {
@@ -26,9 +29,9 @@ const Login = ({ navigation }) => {
 
             if (response.ok) {
                 Alert.alert('Thành công', 'Đăng nhập thành công!');
-                // Lưu thông tin người dùng
-                console.log(data.userDto);
-                navigation.navigate('Home'); // Chuyển đến trang Home
+                // Lưu thông tin người dùng vào Redux
+                dispatch(login(data.userDto));  // Lưu thông tin vào store
+                navigation.navigate('Home');  // Chuyển đến trang Home
             } else {
                 Alert.alert('Lỗi', data.message || 'Đăng nhập thất bại');
             }

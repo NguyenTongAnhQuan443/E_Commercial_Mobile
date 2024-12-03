@@ -2,20 +2,24 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { FontAwesome, MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';  // Import useSelector để lấy dữ liệu từ Redux store
 
 const AccountScreen = () => {
+    // Lấy thông tin người dùng từ Redux store
+    const user = useSelector((state) => state.user.user);
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
             <ScrollView contentContainerStyle={styles.container}>
                 {/* Profile Section */}
                 <View style={styles.profileContainer}>
                     <Image
-                        source={{ uri: 'https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/327579245_5874318742681748_8751004522582569872_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=lnz4dkn_dSoQ7kNvgHU-jPG&_nc_zt=23&_nc_ht=scontent.fsgn2-10.fna&_nc_gid=Awt_H5-w4OdHcCjw-Z1AJby&oh=00_AYCUTfqkcaJQ63UuV51WWzUtLGqa9Ifsnawf8KWvNidYIA&oe=6736535B' }}
+                        source={{ uri: user.avatar || 'https://laodongthudo.vn/stores/news_dataimages/minhphuong/042016/15/13/5853_avatar-wallp-1920x1080.jpg' }}
                         style={styles.profileImage}
                     />
                     <View style={styles.profileDetails}>
-                        <Text style={styles.profileName}>Nguyễn Quân</Text>
-                        <Text style={styles.profileEmail}>ntanhquan.sly@gmail.com</Text>
+                        <Text style={styles.profileName}>{user.fullName || 'Người dùng'}</Text>
+                        <Text style={styles.profileEmail}>{user.email || 'Chưa có email'}</Text>
                     </View>
                     <TouchableOpacity>
                         <MaterialIcons name="edit" size={20} color="green" />
