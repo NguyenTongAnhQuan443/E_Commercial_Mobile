@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import {
     View, Text, TextInput, FlatList, StyleSheet,
-    ActivityIndicator, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Image
+    ActivityIndicator, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
@@ -60,30 +60,32 @@ export default function ChatScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.chatContainer}>
-                    <FlatList
-                        data={messages}
-                        renderItem={renderMessage}
-                        keyExtractor={(item, index) => index.toString()}
-                        ref={flatListRef}
-                        onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
-                        onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
-                    />
-                    {isBotTyping && <ActivityIndicator size="small" color="#000" style={styles.typingIndicator} />}
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={inputMessage}
-                            onChangeText={setInputMessage}
-                            placeholder="Nhập câu hỏi của bạn ..."
-                        />
-                        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-                            <Text style={styles.sendButtonText}>Gửi</Text>
-                        </TouchableOpacity>
+            <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior="padding" enabled>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.chatContainer}>
+                        <ScrollView
+                            ref={flatListRef}
+                            contentContainerStyle={styles.scrollView}
+                            onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
+                            onLayout={() => flatListRef.current.scrollToEnd({ animated: true })}
+                        >
+                            {messages.map((item, index) => renderMessage({ item, index }))}
+                        </ScrollView>
+                        {isBotTyping && <ActivityIndicator size="small" color="#000" style={styles.typingIndicator} />}
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={inputMessage}
+                                onChangeText={setInputMessage}
+                                placeholder="Nhập câu hỏi của bạn ..."
+                            />
+                            <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+                                <Text style={styles.sendButtonText}>Gửi</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
@@ -93,9 +95,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    keyboardAvoidingView: {
+        flex: 1,
+    },
     chatContainer: {
         flex: 1,
         paddingHorizontal: 16,
+        justifyContent: 'space-between', // Ensure input container stays at the bottom
+    },
+    scrollView: {
+        flexGrow: 1,
     },
     messageContainer: {
         flexDirection: 'row',
